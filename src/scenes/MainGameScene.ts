@@ -32,10 +32,6 @@ export default class MainGameScene extends Scene {
             console.error('EntityManager plugin not found');
         }
 
-        this.entityManager.initEnemies();
-        this.entityManager.initBoss();
-        this.entityManager.initGroupCollisions();
-
         const player = this.entityManager.initAndSpawnPlayer();
         player.getComponent(Health)?.once(Health.DEATH_EVENT, () => {
             // Hide the player and let its explosion play before showing the game over screen
@@ -43,6 +39,7 @@ export default class MainGameScene extends Scene {
             this.time.delayedCall(1000, this.endGame, [], this);
         }, this);
         this.entityManager.initEnemies();
+        this.entityManager.initBoss();
         this.entityManager.initGroupCollisions();
 
         if (this.input.keyboard) {
