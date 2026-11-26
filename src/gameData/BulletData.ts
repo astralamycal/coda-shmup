@@ -1,7 +1,7 @@
 export type BulletData = {
     width: number;
     height: number;
-    color: number;
+    color: string; // "#RRGGBB"
     speed: number;
     damage: number;
-}
+};
