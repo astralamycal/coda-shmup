@@ -1,4 +1,4 @@
-import {GameObjects, Plugins, Physics, Scene} from "phaser";
+import {GameObjects, Plugins, Physics, Scene, Scenes} from "phaser";
 import Health from "../components/Health.ts";
 import Bullet from "../entities/Bullet.ts";
 import Enemy from "../entities/Enemy.ts";
