@@ -39,6 +39,7 @@ export default class MainGameScene extends Scene {
             this.time.delayedCall(1000, this.endGame, [], this);
         }, this);
         this.entityManager.initEnemies();
+        this.entityManager.initBoss();
         this.entityManager.initGroupCollisions();
 
         if (this.input.keyboard) {

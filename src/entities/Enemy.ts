@@ -8,7 +8,7 @@ export default class Enemy extends Entity {
     private readonly _bulletData: BulletData = {
         width: 12,
         height: 12,
-        color: 0xf25f5c,
+        color: '#f25f5c',
         speed: 512,
         damage: 1,
     };

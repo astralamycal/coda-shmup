@@ -10,7 +10,7 @@ export default class Player extends Entity {
     private readonly _bulletData: BulletData = {
         width: 12,
         height: 4,
-        color: 0xffe066,
+        color: '#ffe066',
         speed: 1024,
         damage: 1
     };
