@@ -61,8 +61,6 @@ export default class MainUIScene extends Scene {
         this.createXpBar();
 
         this.scene.bringToTop();
-
-        console.log("MainUIScene created");
     }
 
     // XP bar along the bottom of the screen, its fill is scaled from 0 to 1

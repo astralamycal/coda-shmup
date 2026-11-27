@@ -30,15 +30,11 @@ export default class HomeScene extends Phaser.Scene {
         progressBox.fillStyle(0x222222, 0.8);
         progressBox.fillRect(0, y, width, 64);
         this.load.on(Loader.Events.PROGRESS, function (value: number) { // 0-1
-            console.log("Loading : " + value);
-
             progressBar.clear();
             progressBar.fillStyle(0xffffff, 1);
             progressBar.fillRect(0, y, width * value, 64);
         });
         this.load.on(Loader.Events.COMPLETE, function () {
-            console.log("Loading complete");
-
             progressBar.destroy();
             progressBox.destroy();
         });
@@ -77,8 +73,6 @@ export default class HomeScene extends Phaser.Scene {
             this.scene.launch(GameConstants.SceneKeys.MAIN_UI);
             this.scene.start(GameConstants.SceneKeys.MAIN_GAME);
         });
-
-        console.log("HomeScene created");
     }
 
     private createTitle() {

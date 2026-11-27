@@ -17,10 +17,11 @@ export default class Enemy extends Entity {
     private static readonly HIT_SLOWDOWN: number = 0.5; // speed factor while flashing after a hit
 
     private readonly _bulletData: BulletData = {
-        width: 12,
-        height: 12,
+        width: 14,
+        height: 14,
         color: '#ff4fd8',
-        speed: 512,
+        outline: '#ffd6f5',
+        speed: 480,
         damage: 1,
     };
     private _shootTimerConfig: Phaser.Types.Time.TimerEventConfig;

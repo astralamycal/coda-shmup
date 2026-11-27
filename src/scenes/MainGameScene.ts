@@ -60,8 +60,6 @@ export default class MainGameScene extends Scene {
         }
 
         this.registry.set(RegistryConstants.Keys.PLAYER_SCORE, 0);
-
-        console.log("MainGameScene created");
     }
 
     private listenToLevelUp() {
@@ -91,7 +89,6 @@ export default class MainGameScene extends Scene {
         const currentScore: number = Number(this.registry.get(RegistryConstants.Keys.PLAYER_SCORE) ?? 0);
         if (currentScore > bestScore) {
             this.saveManager.setData(SaveConstants.Keys.PLAYER_BEST_SCORE, currentScore);
-            console.log("New Best Score: " + currentScore);
         }
 
         this.scene.start(GameConstants.SceneKeys.GAME_OVER);

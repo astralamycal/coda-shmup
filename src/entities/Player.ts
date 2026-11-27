@@ -11,15 +11,19 @@ import PlayerStats from "../components/PlayerStats.ts";
 import Weapon from "../components/Weapon.ts";
 
 export default class Player extends Entity {
-    private static readonly BASE_RATE_OF_FIRE: number = 0.5; // seconds between two shots
+    private static readonly BASE_HEALTH: number = 5;
+    private static readonly BASE_RATE_OF_FIRE: number = 0.35; // seconds between two shots
+    private static readonly INVULNERABILITY_DURATION: number = 400; // in ms after a hit
+    private static readonly INVULNERABILITY_ALPHA: number = 0.5;
     private static readonly SPREAD_ANGLE: number = 20; // used once the player shoots several bullets
     private static readonly HOMING_INTERVAL: number = 10000; // in ms, between two volleys of aimed bullets
 
     private readonly _bulletData: BulletData = {
-        width: 12,
-        height: 4,
-        color: '#7fdcff',
-        speed: 1024,
+        width: 32,
+        height: 8,
+        color: '#ffffff',
+        outline: '#39d6ff',
+        speed: 1100,
         damage: 1
     };
 
@@ -44,7 +48,7 @@ export default class Player extends Entity {
     }
 
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
-        this.addComponent(new Health(3, this));
+        this.addComponent(new Health(Player.BASE_HEALTH, this));
         this.addComponent(new Movement());
         this.addComponent(new Weapon(bulletsGroup, this._bulletData, 1, Player.SPREAD_ANGLE));
         this.addComponent(new PlayerStats());
@@ -70,10 +74,14 @@ export default class Player extends Entity {
             loop: true
         });
 
+        // Short invulnerability after a hit, shown by a transparent car: a spread shot can't hit several times
         this.getComponent(Health)?.on(Health.CHANGE_EVENT, () => {
             this.arcadeBody.setEnable(false);
+            this.setAlpha(Player.INVULNERABILITY_ALPHA);
 
-            this.scene.time.delayedCall(50, () => {
+            this.scene.time.delayedCall(Player.INVULNERABILITY_DURATION, () => {
+                this.setAlpha(1);
+
                 // A dead player stays disabled
                 if (this.active)
                     this.arcadeBody.setEnable(true);
