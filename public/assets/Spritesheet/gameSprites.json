@@ -4,219 +4,219 @@
 			"image": "gameSprites.png",
 			"format": "RGBA8888",
 			"size": {
-				"w": 174,
-				"h": 416
+				"w": 1010,
+				"h": 258
 			},
 			"scale": 1,
 			"frames": [
 				{
-					"filename": "playerShip2_blue",
+					"filename": "boss",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 75,
-						"h": 112
+						"w": 328,
+						"h": 254
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 75,
-						"h": 112
+						"w": 328,
+						"h": 254
 					},
 					"frame": {
 						"x": 2,
 						"y": 2,
-						"w": 75,
-						"h": 112
+						"w": 328,
+						"h": 254
 					}
 				},
 				{
-					"filename": "playerShip1_blue",
+					"filename": "enemyCar-shoot0",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 75,
-						"h": 99
+						"w": 144,
+						"h": 80
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 75,
-						"h": 99
+						"w": 144,
+						"h": 80
 					},
 					"frame": {
-						"x": 2,
-						"y": 118,
-						"w": 75,
-						"h": 99
-					}
-				},
-				{
-					"filename": "playerShip3_blue",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 75,
-						"h": 98
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 75,
-						"h": 98
-					},
-					"frame": {
-						"x": 2,
-						"y": 221,
-						"w": 75,
-						"h": 98
-					}
-				},
-				{
-					"filename": "ufoRed-shoot0",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 91,
-						"h": 91
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 91,
-						"h": 91
-					},
-					"frame": {
-						"x": 2,
-						"y": 323,
-						"w": 91,
-						"h": 91
-					}
-				},
-				{
-					"filename": "ufoRed-shoot1",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 91,
-						"h": 91
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 91,
-						"h": 91
-					},
-					"frame": {
-						"x": 81,
+						"x": 334,
 						"y": 2,
-						"w": 91,
-						"h": 91
+						"w": 144,
+						"h": 80
 					}
 				},
 				{
-					"filename": "ufoRed",
+					"filename": "enemyCar-shoot1",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 91,
-						"h": 91
+						"w": 144,
+						"h": 80
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 91,
-						"h": 91
+						"w": 144,
+						"h": 80
 					},
 					"frame": {
-						"x": 81,
-						"y": 97,
-						"w": 91,
-						"h": 91
+						"x": 482,
+						"y": 2,
+						"w": 144,
+						"h": 80
 					}
 				},
 				{
-					"filename": "playerLife1_blue",
+					"filename": "enemyCar",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 33,
-						"h": 26
+						"w": 144,
+						"h": 80
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 33,
-						"h": 26
+						"w": 144,
+						"h": 80
 					},
 					"frame": {
-						"x": 81,
-						"y": 192,
-						"w": 33,
-						"h": 26
+						"x": 630,
+						"y": 2,
+						"w": 144,
+						"h": 80
 					}
 				},
 				{
-					"filename": "star1",
+					"filename": "playerCar3",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 25,
-						"h": 24
+						"w": 144,
+						"h": 68
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 25,
-						"h": 24
+						"w": 144,
+						"h": 68
 					},
 					"frame": {
-						"x": 81,
-						"y": 222,
-						"w": 25,
-						"h": 24
+						"x": 778,
+						"y": 2,
+						"w": 144,
+						"h": 68
 					}
 				},
 				{
-					"filename": "star2",
+					"filename": "orb",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 25,
-						"h": 24
+						"w": 44,
+						"h": 44
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 25,
-						"h": 24
+						"w": 44,
+						"h": 44
 					},
 					"frame": {
-						"x": 81,
-						"y": 250,
-						"w": 25,
-						"h": 24
+						"x": 926,
+						"y": 2,
+						"w": 44,
+						"h": 44
 					}
 				},
 				{
-					"filename": "star3",
+					"filename": "playerLife",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 24,
-						"h": 24
+						"w": 34,
+						"h": 58
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 24,
-						"h": 24
+						"w": 34,
+						"h": 58
 					},
 					"frame": {
-						"x": 81,
-						"y": 278,
-						"w": 24,
-						"h": 24
+						"x": 974,
+						"y": 2,
+						"w": 34,
+						"h": 58
+					}
+				},
+				{
+					"filename": "spark",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 926,
+						"y": 50,
+						"w": 16,
+						"h": 16
+					}
+				},
+				{
+					"filename": "playerCar2",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 132,
+						"h": 68
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 132,
+						"h": 68
+					},
+					"frame": {
+						"x": 778,
+						"y": 74,
+						"w": 132,
+						"h": 68
+					}
+				},
+				{
+					"filename": "playerCar1",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 116,
+						"h": 68
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 116,
+						"h": 68
+					},
+					"frame": {
+						"x": 334,
+						"y": 86,
+						"w": 116,
+						"h": 68
 					}
 				}
 			]

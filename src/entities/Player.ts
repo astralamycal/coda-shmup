@@ -3,6 +3,7 @@ import {PlayerShipData, PlayerShipsData} from "../gameData/PlayerShipsData.ts";
 import type {BulletData} from "../gameData/BulletData.ts";
 import {ProgressionData} from "../gameData/ProgressionData.ts";
 import Entity from './Entity.ts';
+import GameConstants from "../GameConstants.ts";
 import Experience from "../components/Experience.ts";
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
@@ -16,7 +17,7 @@ export default class Player extends Entity {
     private readonly _bulletData: BulletData = {
         width: 12,
         height: 4,
-        color: '#ffe066',
+        color: '#7fdcff',
         speed: 1024,
         damage: 1
     };
@@ -120,7 +121,7 @@ export default class Player extends Entity {
         if (this._cursorKeys.space.isDown) {
             if (timeSinceLaunch - this._lastShotTime > this._rateOfFire * 1000) {
                 this.getComponent(Weapon)?.shoot(this);
-                this.scene.sound.play('sfx_laser1');
+                this.scene.sound.play(GameConstants.SoundKeys.PLAYER_SHOOT);
 
                 this._lastShotTime = timeSinceLaunch;
             }

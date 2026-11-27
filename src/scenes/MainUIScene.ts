@@ -9,9 +9,10 @@ import {BuffData} from "../gameData/BuffData.ts";
 export default class MainUIScene extends Scene {
     private static readonly HEALTH_BAR_WIDTH: number = 400;
     private static readonly HEALTH_BAR_HEIGHT: number = 40;
-    private static readonly HEALTH_BAR_COLOR: number = 0xe63946;
+    private static readonly LIFE_ICON_FRAME: string = 'playerLife';
+    private static readonly HEALTH_BAR_COLOR: number = 0xff3fa4;
     private static readonly XP_BAR_HEIGHT: number = 24;
-    private static readonly XP_BAR_COLOR: number = 0x66ccff;
+    private static readonly XP_BAR_COLOR: number = 0x39d6ff;
     private static readonly BAR_BACKGROUND_COLOR: number = 0x222222;
     private static readonly POPUP_OVERLAY_COLOR: number = 0x000000;
     private static readonly POPUP_OVERLAY_ALPHA: number = 0.7;
@@ -41,8 +42,8 @@ export default class MainUIScene extends Scene {
 
     // noinspection JSUnusedGlobalSymbols
     create() {
-        const playerHealthIcon = this.add.image(64, 64, "sprites", "playerLife1_blue")
-            .setOrigin(0, 0).setScale(1.5);
+        const playerHealthIcon = this.add.image(64, 48, "sprites", MainUIScene.LIFE_ICON_FRAME)
+            .setOrigin(0, 0);
         const healthBarX: number = playerHealthIcon.x + playerHealthIcon.displayWidth + 16;
         this.add.rectangle(healthBarX, 64, MainUIScene.HEALTH_BAR_WIDTH, MainUIScene.HEALTH_BAR_HEIGHT,
             MainUIScene.BAR_BACKGROUND_COLOR).setOrigin(0, 0);
@@ -103,7 +104,7 @@ export default class MainUIScene extends Scene {
 
         buffs.forEach((buff: BuffData, index: number) => {
             const choice = this.add.text(centerX, centerY + index * MainUIScene.POPUP_CHOICE_SPACING, buff.label,
-                {fontSize: '48px', color: '#fff', fontFamily: 'future', backgroundColor: '#333', padding: {x: 32, y: 16}})
+                {fontSize: '48px', color: '#7fdcff', fontFamily: 'future', backgroundColor: '#0b0b2a', padding: {x: 32, y: 16}})
                 .setOrigin(0.5)
                 .setInteractive({useHandCursor: true});
 

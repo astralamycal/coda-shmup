@@ -12,9 +12,10 @@ import GameConstants from "../GameConstants.ts";
 
 export default class MainGameScene extends Scene {
     private static readonly BUFF_CHOICES_COUNT: number = 3;
+    private static readonly ROAD_TILE_SCALE: number = 2;
+    private static readonly ROAD_SCROLL_SPEED: number = 0.3; // in road texture px/ms
 
     private bg: GameObjects.TileSprite;
-    private planet: GameObjects.Image;
     private saveManager: SaveManager;
     private entityManager: EntityManager;
     private buffManager: BuffManager;
@@ -31,10 +32,8 @@ export default class MainGameScene extends Scene {
         }
         this.saveManager?.load();
 
-        const bgMargin = 512;
-        this.bg = this.add.tileSprite(this.cameras.main.centerX, this.cameras.main.centerY,
-            this.cameras.main.width + bgMargin, this.cameras.main.height + bgMargin, 'bg').setTileScale(2);
-        this.planet = this.add.image(0, -512, 'planet').setOrigin(0);
+        this.bg = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'bg')
+            .setOrigin(0, 0).setTileScale(MainGameScene.ROAD_TILE_SCALE);
 
         if (!this.entityManager) {
             console.error('EntityManager plugin not found');
@@ -55,7 +54,9 @@ export default class MainGameScene extends Scene {
         this.listenToLevelUp();
 
         if (this.input.keyboard) {
+            // Debug keys: R restarts the game, B makes the boss appear now
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R).on('down', () => this.scene.restart());
+            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B).on('down', () => this.entityManager.spawnBoss());
         } else {
             console.error('No keyboard input');
         }
@@ -77,6 +78,7 @@ export default class MainGameScene extends Scene {
     // Freeze the game while the player picks a buff in the UI scene
     private onPlayerLevelUp() {
         const choices: BuffData[] = this.buffManager.pickRandomBuffs(MainGameScene.BUFF_CHOICES_COUNT);
+        this.sound.play(GameConstants.SoundKeys.LEVEL_UP);
         this.scene.pause();
         this.game.events.emit(GameConstants.Events.LEVEL_UP_CHOICES_EVENT, choices);
     }
@@ -98,7 +100,7 @@ export default class MainGameScene extends Scene {
     }
 
     update(_timeSinceLaunch: number, deltaTime: number) {
-        this.bg.tilePositionY -= 0.1 * deltaTime;
-        this.planet.y += 0.40 * deltaTime;
+        // The road scrolls down: the player drives up
+        this.bg.tilePositionY -= MainGameScene.ROAD_SCROLL_SPEED * deltaTime;
     }
 }

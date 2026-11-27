@@ -1,9 +1,10 @@
 {
   "boss": {
-    "frame": "ufoRed",
-    "tint": "#b05cff",
-    "scale": 2,
+    "frame": "boss",
+    "tint": "#ffffff",
+    "scale": 1.5,
     "health": 30,
+    "introDuration": 1500,
     "reward": {
       "xp": 10,
       "score": 20
@@ -25,7 +26,7 @@
       "bullet": {
         "width": 16,
         "height": 16,
-        "color": "#d68cff",
+        "color": "#ff9a3c",
         "speed": 400,
         "damage": 1
       }
@@ -37,7 +38,7 @@
   },
   "types": [
     {
-      "tint": "#ffffff",
+      "tint": "#c77dff",
       "health": 1,
       "speed": 0.2,
       "canShoot": true,
@@ -47,7 +48,7 @@
       }
     },
     {
-      "tint": "#7dff7d",
+      "tint": "#ff4fd8",
       "health": 1,
       "speed": 0.45,
       "canShoot": false,
@@ -57,7 +58,7 @@
       }
     },
     {
-      "tint": "#ff7d7d",
+      "tint": "#ff5555",
       "health": 4,
       "speed": 0.12,
       "canShoot": true,

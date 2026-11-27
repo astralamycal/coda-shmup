@@ -7,6 +7,7 @@ export type BossData = {
     tint: string; // "#rrggbb"
     scale: number;
     health: number;
+    introDuration: number; // in ms, the boss doesn't shoot during its intro
     reward: RewardData;
     spawn: BossSpawnData;
     movement: SineMovementData;

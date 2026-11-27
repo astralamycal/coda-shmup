@@ -40,6 +40,11 @@ export default class Entity extends Physics.Arcade.Sprite {
         return this._components.find(component => component instanceof componentType) as T;
     }
 
+    // Arcade bodies don't rotate: a circle centered on the sprite stays right whatever its angle
+    protected setCenteredCircleBody(radius: number) {
+        this.arcadeBody.setCircle(radius, this.width / 2 - radius, this.height / 2 - radius);
+    }
+
     preUpdate(_timeSinceLaunch: number, _deltaTime: number) {
         super.preUpdate(_timeSinceLaunch, _deltaTime);
 

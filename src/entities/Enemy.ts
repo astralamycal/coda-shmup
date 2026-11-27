@@ -1,5 +1,6 @@
 import type {BulletData} from '../gameData/BulletData.ts';
 import Entity from './Entity.ts';
+import GameConstants from "../GameConstants.ts";
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
 import Weapon from "../components/Weapon.ts";
@@ -7,6 +8,9 @@ import {EnemyTypeData} from "../gameData/EnemyTypeData.ts";
 import {RewardData} from "../gameData/RewardData.ts";
 
 export default class Enemy extends Entity {
+    public static readonly FRAME: string = 'enemyCar';
+    private static readonly SHOOT_ANIMATION: string = 'enemyShoot';
+    private static readonly BODY_RADIUS: number = 26;
     private static readonly FACING_DOWN_ANGLE: number = 90;
     private static readonly HIT_FLASH_COLOR: number = 0xffffff;
     private static readonly HIT_FLASH_DURATION: number = 50;
@@ -15,7 +19,7 @@ export default class Enemy extends Entity {
     private readonly _bulletData: BulletData = {
         width: 12,
         height: 12,
-        color: '#f25f5c',
+        color: '#ff4fd8',
         speed: 512,
         damage: 1,
     };
@@ -48,19 +52,20 @@ export default class Enemy extends Entity {
         this._shootTimer = this.scene.time.addEvent(this._shootTimerConfig);
 
         // Create animation when enemy is about to shoot in the global animation manager
-        if (!this.scene.anims.exists('ufoShoot')) {
+        // The headlights flash before the enemy shoots
+        if (!this.scene.anims.exists(Enemy.SHOOT_ANIMATION)) {
             this.scene.anims.create({
-                key: 'ufoShoot',
+                key: Enemy.SHOOT_ANIMATION,
                 frames: [
-                    {key: 'sprites', frame: 'ufoRed'},
-                    {key: 'sprites', frame: 'ufoRed-shoot0'},
-                    {key: 'sprites', frame: 'ufoRed-shoot1'}
+                    {key: 'sprites', frame: Enemy.FRAME},
+                    {key: 'sprites', frame: Enemy.FRAME + '-shoot0'},
+                    {key: 'sprites', frame: Enemy.FRAME + '-shoot1'}
                 ],
                 frameRate: 4,
             });
         }
 
-        this.arcadeBody.setCircle(this.displayWidth / 2);
+        this.setCenteredCircleBody(Enemy.BODY_RADIUS);
     }
 
     // The type and the difficulty are applied each time the enemy is taken from the pool
@@ -109,12 +114,12 @@ export default class Enemy extends Entity {
     }
 
     private shoot() {
-        this.play('ufoShoot');
+        this.play(Enemy.SHOOT_ANIMATION);
         this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-            this.setTexture('sprites', 'ufoRed');
+            this.setTexture('sprites', Enemy.FRAME);
 
             this.getComponent(Weapon)?.shoot(this);
-            this.scene.sound.play('sfx_laser2');
+            this.scene.sound.play(GameConstants.SoundKeys.ENEMY_SHOOT);
         });
     }
 

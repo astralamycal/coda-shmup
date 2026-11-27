@@ -6,14 +6,14 @@ export default class PlayerStats extends Phaser.Events.EventEmitter implements I
 
     public static readonly CHANGE_EVENT: string = 'change';
 
-    // Multipliers start at 1, the magnet radius at 0 (no magnet)
+    // Multipliers start at 1, the magnet radius gives a small natural pull on the orbs (in px)
     private readonly _values: Record<StatName, number> = {
         damage: 1,
         fireRate: 1,
         xpGain: 1,
         scoreMultiplier: 1,
         bulletCount: 1,
-        magnetRadius: 0
+        magnetRadius: 120
     };
 
     public get(stat: StatName): number {

@@ -76,7 +76,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
         this._enemies = this.scene!.physics.add.group({
             classType: Enemy,
             defaultKey: 'sprites',
-            defaultFrame: 'ufoRed',
+            defaultFrame: Enemy.FRAME,
             createCallback: (enemy) => {
                 (enemy as Enemy).init(this._enemyBullets);
                 this.listenToDeath(enemy as Enemy);
@@ -142,6 +142,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
 
         this.scene!.physics.add.overlap(this._player, this._orbs, (player, orb) => {
             (orb as Orb).disable();
+            this.scene!.sound.play(GameConstants.SoundKeys.PICKUP);
             (player as Player).collectXp((orb as Orb).xpValue);
         });
 
@@ -179,6 +180,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
         const scoreMultiplier = this._player.getComponent(PlayerStats)?.get('scoreMultiplier') ?? 1;
         this.scene!.registry.inc(RegistryConstants.Keys.PLAYER_SCORE, Math.round(enemy.reward.score * scoreMultiplier));
         this.spawnOrb(enemy.x, enemy.y, enemy.reward.xp);
+        this.scene!.sound.play(GameConstants.SoundKeys.EXPLOSION);
     }
 
     private spawnOrb(x: number, y: number, xpValue: number) {
@@ -202,7 +204,8 @@ export default class EntityManager extends Plugins.ScenePlugin {
         this.spawnBoss();
     }
 
-    private spawnBoss() {
+    // Also called by the B debug key
+    public spawnBoss() {
         // Null when the previous boss is still alive
         const boss = this._bosses.get() as Boss;
         if (!boss)
@@ -210,6 +213,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
 
         boss.enable(this.scene!.cameras.main.centerX, -boss.displayHeight, this._bossSpawnCount);
         this._bossSpawnCount++;
+        this.scene!.sound.play(GameConstants.SoundKeys.BOSS_HIT);
     }
 
     // 1 at the start, then increasePerLevel more every everyScore points

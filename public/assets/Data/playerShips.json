@@ -1,29 +1,29 @@
 {
   "1": {
     "movementSpeed": 0.6,
-    "texture": "playerShip1_blue",
+    "texture": "playerCar1",
     "body": {
-      "radius": 42,
-      "offsetX": -4,
-      "offsetY": 16
+      "radius": 22,
+      "offsetX": 36,
+      "offsetY": 12
     }
   },
   "2": {
     "movementSpeed": 0.9,
-    "texture": "playerShip2_blue",
+    "texture": "playerCar2",
     "body": {
-      "radius": 42,
-      "offsetX": -4,
-      "offsetY": 16
+      "radius": 22,
+      "offsetX": 44,
+      "offsetY": 12
     }
   },
   "3": {
     "movementSpeed": 1.2,
-    "texture": "playerShip3_blue",
+    "texture": "playerCar3",
     "body": {
-      "radius": 42,
-      "offsetX": -4,
-      "offsetY": 16
+      "radius": 22,
+      "offsetX": 50,
+      "offsetY": 12
     }
   }
 }

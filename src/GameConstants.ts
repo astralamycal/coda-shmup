@@ -13,5 +13,16 @@ export default class GameConstants {
         GAME_OVER: "GameOverScene",
     } as const);
 
+    // Each sound file is named after its key: public/assets/Sounds/<key>.ogg
+    public static readonly SoundKeys = Object.freeze({
+        PLAYER_SHOOT: "sfx_laser1",
+        ENEMY_SHOOT: "sfx_laser2",
+        BOSS_HIT: "sfx_boom",
+        EXPLOSION: "sfx_explosion",
+        PICKUP: "sfx_pickup",
+        LEVEL_UP: "sfx_levelup",
+        MUSIC: "music",
+    } as const);
+
     public static readonly MAX_SCORE_DIGITS: number = 6;
 }
