@@ -1,5 +1,13 @@
 {
   "firstLevelXp": 5,
   "levelXpGrowth": 1.5,
-  "healthPerLevel": 1
+  "healthPerLevel": 1,
+  "speedPowerUp": {
+    "dropChance": 0.06,
+    "duration": 8000,
+    "shipIds": [
+      2,
+      3
+    ]
+  }
 }

@@ -13,7 +13,9 @@ export default class PlayerStats extends Phaser.Events.EventEmitter implements I
         xpGain: 1,
         scoreMultiplier: 1,
         bulletCount: 1,
-        magnetRadius: 120
+        magnetRadius: 120,
+        homingBullets: 0,
+        spawnRate: 1
     };
 
     public get(stat: StatName): number {

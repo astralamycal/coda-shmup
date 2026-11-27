@@ -12,11 +12,19 @@ export default class BuffManager extends Plugins.ScenePlugin {
         super(scene, pluginManager, BuffManager.PLUGIN_KEY);
     }
 
-    public pickRandomBuffs(count: number): BuffData[] {
-        const buffs = this.scene!.cache.json.get('buffs') as BuffData[];
+    public pickRandomBuffs(count: number, player: Player): BuffData[] {
+        // filter() returns a new array: the one in the cache stays untouched by the shuffle
+        const availableBuffs = (this.scene!.cache.json.get('buffs') as BuffData[])
+            .filter((buff: BuffData) => !this.isMaxed(buff, player));
 
-        // Shuffle a copy: the array in the cache must stay untouched
-        return Phaser.Utils.Array.Shuffle([...buffs]).slice(0, count);
+        return Phaser.Utils.Array.Shuffle(availableBuffs).slice(0, count);
+    }
+
+    private isMaxed(buff: BuffData, player: Player): boolean {
+        if (buff.max === undefined || buff.stat === 'maxHealth')
+            return false;
+
+        return (player.getComponent(PlayerStats)?.get(buff.stat) ?? 0) >= buff.max;
     }
 
     public applyBuff(buff: BuffData, player: Player) {

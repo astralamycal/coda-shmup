@@ -49,6 +49,7 @@ export default class MainGameScene extends Scene {
         this.entityManager.initEnemies();
         this.entityManager.initBoss();
         this.entityManager.initOrbs();
+        this.entityManager.initPowerUps();
         this.entityManager.initGroupCollisions();
 
         this.listenToLevelUp();
@@ -77,7 +78,7 @@ export default class MainGameScene extends Scene {
 
     // Freeze the game while the player picks a buff in the UI scene
     private onPlayerLevelUp() {
-        const choices: BuffData[] = this.buffManager.pickRandomBuffs(MainGameScene.BUFF_CHOICES_COUNT);
+        const choices: BuffData[] = this.buffManager.pickRandomBuffs(MainGameScene.BUFF_CHOICES_COUNT, this._player);
         this.sound.play(GameConstants.SoundKeys.LEVEL_UP);
         this.scene.pause();
         this.game.events.emit(GameConstants.Events.LEVEL_UP_CHOICES_EVENT, choices);

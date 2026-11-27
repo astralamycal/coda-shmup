@@ -6,11 +6,13 @@ import Bullet from "../entities/Bullet.ts";
 import Enemy from "../entities/Enemy.ts";
 import Entity from "../entities/Entity.ts";
 import Orb from "../entities/Orb.ts";
+import SpeedPowerUp from "../entities/SpeedPowerUp.ts";
 import Player from "../entities/Player.ts";
 import GroupUtils from "../utils/GroupUtils.ts";
 import {BossData} from "../gameData/BossData.ts";
 import {EnemiesData} from "../gameData/EnemiesData.ts";
 import {EnemyTypeData} from "../gameData/EnemyTypeData.ts";
+import {ProgressionData, SpeedPowerUpData} from "../gameData/ProgressionData.ts";
 import GameConstants from "../GameConstants.ts";
 import RegistryConstants from "../RegistryConstants.ts";
 
@@ -40,6 +42,8 @@ export default class EntityManager extends Plugins.ScenePlugin {
     private _nextBossScore: number;
     private _bossSpawnCount: number;
     private _orbs: Physics.Arcade.Group;
+    private _powerUps: Physics.Arcade.Group;
+    private _speedPowerUpData: SpeedPowerUpData;
 
     constructor(scene: Scene, pluginManager: Plugins.PluginManager) {
         super(scene, pluginManager, EntityManager.PLUGIN_KEY);
@@ -83,13 +87,10 @@ export default class EntityManager extends Plugins.ScenePlugin {
             }
         });
 
+        this._player.setTargets(this._enemies);
+
         // Spawn enemies indefinitely
-        this.scene!.time.addEvent({
-            delay: 1500,
-            callback: this.spawnEnemy,
-            callbackScope: this,
-            loop: true
-        });
+        this.scheduleNextEnemy();
 
         console.log("[EntityManager] Enemies initialized");
 
@@ -131,6 +132,17 @@ export default class EntityManager extends Plugins.ScenePlugin {
         GroupUtils.populate(EntityManager.ORB_POOL_SIZE, this._orbs);
     }
 
+    public initPowerUps() {
+        this._speedPowerUpData = (this.scene!.cache.json.get('progression') as ProgressionData).speedPowerUp;
+        this._powerUps = this.scene!.physics.add.group({
+            classType: SpeedPowerUp,
+            defaultKey: 'sprites',
+            createCallback: (powerUp) => {
+                (powerUp as SpeedPowerUp).init();
+            }
+        });
+    }
+
     public initGroupCollisions() {
         this.scene!.physics.add.overlap(this._playerBullets, this._enemies, (bullet, enemy) => {
             this.onPlayerBulletHit(bullet as Bullet, enemy as Enemy);
@@ -144,6 +156,12 @@ export default class EntityManager extends Plugins.ScenePlugin {
             (orb as Orb).disable();
             this.scene!.sound.play(GameConstants.SoundKeys.PICKUP);
             (player as Player).collectXp((orb as Orb).xpValue);
+        });
+
+        this.scene!.physics.add.overlap(this._player, this._powerUps, (player, powerUp) => {
+            (powerUp as SpeedPowerUp).disable();
+            (player as Player).applySpeedBoost((powerUp as SpeedPowerUp).shipId, this._speedPowerUpData.duration);
+            this.scene!.sound.play(GameConstants.SoundKeys.PICKUP);
         });
 
         this.scene!.physics.add.overlap(this._player, this._bosses, (player) => {
@@ -180,7 +198,19 @@ export default class EntityManager extends Plugins.ScenePlugin {
         const scoreMultiplier = this._player.getComponent(PlayerStats)?.get('scoreMultiplier') ?? 1;
         this.scene!.registry.inc(RegistryConstants.Keys.PLAYER_SCORE, Math.round(enemy.reward.score * scoreMultiplier));
         this.spawnOrb(enemy.x, enemy.y, enemy.reward.xp);
+        this.trySpawnPowerUp(enemy.x, enemy.y);
         this.scene!.sound.play(GameConstants.SoundKeys.EXPLOSION);
+    }
+
+    private trySpawnPowerUp(x: number, y: number) {
+        if (Math.random() >= this._speedPowerUpData.dropChance)
+            return;
+
+        const powerUp = this._powerUps.get() as SpeedPowerUp;
+        if (!powerUp)
+            return;
+
+        powerUp.enable(x, y, Phaser.Utils.Array.GetRandom(this._speedPowerUpData.shipIds));
     }
 
     private spawnOrb(x: number, y: number, xpValue: number) {
@@ -225,8 +255,21 @@ export default class EntityManager extends Plugins.ScenePlugin {
         return 1 + level * difficultyData.increasePerLevel;
     }
 
+    // The delay shrinks with the difficulty and with the traffic buff
+    private scheduleNextEnemy() {
+        const delay: number = this._enemiesData.spawn.delay / (this.getDifficulty() * this.getSpawnRate());
+        this.scene!.time.delayedCall(delay, () => {
+            this.spawnEnemy();
+            this.scheduleNextEnemy();
+        });
+    }
+
+    private getSpawnRate(): number {
+        return this._player.getComponent(PlayerStats)?.get('spawnRate') ?? 1;
+    }
+
     private spawnEnemy() {
-        if (this._enemies.countActive(true) >= 5) {
+        if (this._enemies.countActive(true) >= Math.round(this._enemiesData.spawn.maxActive * this.getSpawnRate())) {
             return;
         }
 

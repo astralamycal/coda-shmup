@@ -8,6 +8,11 @@ export type EnemyTypeData = {
     reward: RewardData;
 }
 
+export type EnemySpawnData = {
+    delay: number; // in ms between two enemies, divided by the difficulty and the traffic buff
+    maxActive: number; // enemies on screen at most, multiplied by the traffic buff
+}
+
 export type DifficultyData = {
     everyScore: number; // the difficulty goes up one level every X points
     increasePerLevel: number; // health, speed and damage multiplier added at each level

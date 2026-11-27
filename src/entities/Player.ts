@@ -13,6 +13,7 @@ import Weapon from "../components/Weapon.ts";
 export default class Player extends Entity {
     private static readonly BASE_RATE_OF_FIRE: number = 0.5; // seconds between two shots
     private static readonly SPREAD_ANGLE: number = 20; // used once the player shoots several bullets
+    private static readonly HOMING_INTERVAL: number = 10000; // in ms, between two volleys of aimed bullets
 
     private readonly _bulletData: BulletData = {
         width: 12,
@@ -26,6 +27,9 @@ export default class Player extends Entity {
     private _playerShipData: PlayerShipData;
     private _rateOfFire: number;
     private _lastShotTime: number;
+    private _targets: Phaser.Physics.Arcade.Group;
+    private _selectedShipId: number;
+    private _speedBoostTimer: Phaser.Time.TimerEvent | undefined;
 
     constructor(scene: Scene, x: number, y: number) {
         super(scene, x, y, 'sprites');
@@ -59,6 +63,13 @@ export default class Player extends Entity {
         this._rateOfFire = Player.BASE_RATE_OF_FIRE;
         this._lastShotTime = 0;
 
+        this.scene.time.addEvent({
+            delay: Player.HOMING_INTERVAL,
+            callback: this.shootHomingBullets,
+            callbackScope: this,
+            loop: true
+        });
+
         this.getComponent(Health)?.on(Health.CHANGE_EVENT, () => {
             this.arcadeBody.setEnable(false);
 
@@ -86,7 +97,28 @@ export default class Player extends Entity {
         this._rateOfFire = Player.BASE_RATE_OF_FIRE / stats.get('fireRate');
     }
 
+    public setTargets(targets: Phaser.Physics.Arcade.Group) {
+        this._targets = targets;
+    }
+
+    // Keys 1, 2 and 3: during a speed boost, the chosen ship comes back at the end of the boost
     public selectPlayerShip(playerShipDataId: number) {
+        this._selectedShipId = playerShipDataId;
+        if (!this._speedBoostTimer)
+            this.useShip(playerShipDataId);
+    }
+
+    public applySpeedBoost(playerShipDataId: number, duration: number) {
+        this._speedBoostTimer?.remove();
+        this.useShip(playerShipDataId);
+
+        this._speedBoostTimer = this.scene.time.delayedCall(duration, () => {
+            this._speedBoostTimer = undefined;
+            this.useShip(this._selectedShipId);
+        });
+    }
+
+    private useShip(playerShipDataId: number) {
         const playerShipsData = this.scene.cache.json.get('playerShips') as PlayerShipsData;
         this._playerShipData = playerShipsData[playerShipDataId];
 
@@ -95,6 +127,32 @@ export default class Player extends Entity {
         this.arcadeBody.setCircle(bodyData.radius, bodyData.offsetX, bodyData.offsetY);
 
         this.getComponent(Movement)?.setSpeed(this._playerShipData.movementSpeed);
+    }
+
+    // One bullet towards each of the farthest enemies
+    private shootHomingBullets() {
+        const homingBullets: number = this.getComponent(PlayerStats)?.get('homingBullets') ?? 0;
+        if (!this.active || homingBullets === 0)
+            return;
+
+        const targets: Entity[] = this.getFarthestTargets(homingBullets);
+        targets.forEach((target: Entity) => {
+            const angle: number = Phaser.Math.RadToDeg(Phaser.Math.Angle.Between(this.x, this.y, target.x, target.y));
+            this.getComponent(Weapon)?.shootAt(this, angle);
+        });
+
+        if (targets.length > 0)
+            this.scene.sound.play(GameConstants.SoundKeys.PLAYER_SHOOT);
+    }
+
+    private getFarthestTargets(count: number): Entity[] {
+        if (!this._targets)
+            return [];
+
+        const distanceTo = (target: Entity): number => Phaser.Math.Distance.Between(this.x, this.y, target.x, target.y);
+        return (this._targets.getMatching('active', true) as Entity[])
+            .sort((a: Entity, b: Entity) => distanceTo(b) - distanceTo(a))
+            .slice(0, count);
     }
 
     preUpdate(timeSinceLaunch: number, deltaTime: number) {

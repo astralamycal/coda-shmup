@@ -68,6 +68,10 @@
       }
     }
   ],
+  "spawn": {
+    "delay": 1500,
+    "maxActive": 6
+  },
   "difficulty": {
     "everyScore": 50,
     "increasePerLevel": 0.15

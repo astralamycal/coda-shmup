@@ -45,6 +45,14 @@ export default class Weapon implements IComponent {
         }
     }
 
+    // One bullet, whatever the spread: used to aim at a target
+    public shootAt(source: Entity, angle: number) {
+        if (!this.enabled || !this._bullets)
+            return;
+
+        this.shootBullet(source, angle);
+    }
+
     private getAngleStep(): number {
         if (this._bulletCount <= 1)
             return 0;
