@@ -1,5 +1,5 @@
-import Entity from "../entities/Entity.ts";
-import IComponent from "./IComponent.ts";
+import Entity from '../entities/Entity.ts';
+import IComponent from './IComponent.ts';
 
 export default class Movement implements IComponent {
     public enabled: boolean = true;
@@ -17,15 +17,13 @@ export default class Movement implements IComponent {
     }
 
     public moveHorizontally(entity: Entity, deltaTime: number) {
-        if (!this.enabled)
-            return;
+        if (!this.enabled) return;
 
         entity.x += this._speed * deltaTime;
     }
 
     public moveVertically(entity: Entity, deltaTime: number) {
-        if (!this.enabled)
-            return;
+        if (!this.enabled) return;
 
         entity.y += this._speed * deltaTime;
     }

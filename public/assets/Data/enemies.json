@@ -1,32 +1,80 @@
 {
   "boss": {
-    "frame": "ufoRed",
-    "tint": "#b05cff",
-    "scale": 2,
-    "health": 30,
-    "spawn": {
-      "firstScore": 20,
-      "everyScore": 50
+    "frame": "boss",
+    "tint": "#ffffff",
+    "scale": 1.5,
+    "health": 40,
+    "introDuration": 1500,
+    "reward": {
+      "xp": 15,
+      "score": 30
     },
-    
+    "spawn": {
+      "firstScore": 40,
+      "everyScore": 80
+    },
     "movement": {
       "verticalSpeed": 0.1,
       "targetY": 400,
       "amplitude": 300,
       "frequency": 0.0015
     },
-    
     "weapon": {
       "bulletCount": 7,
       "spreadAngle": 60,
-      "fireDelay": 2000,
+      "fireDelay": 2200,
       "bullet": {
-        "width": 16,
-        "height": 16,
-        "color": "#d68cff",
-        "speed": 400,
+        "width": 18,
+        "height": 18,
+        "color": "#ff9a3c",
+        "outline": "#ffe0b8",
+        "speed": 380,
         "damage": 1
       }
+    },
+    "scaling": {
+      "healthPerSpawn": 0.6,
+      "bulletsPerSpawn": 2
     }
+  },
+  "types": [
+    {
+      "tint": "#c77dff",
+      "health": 1,
+      "speed": 0.2,
+      "canShoot": true,
+      "reward": {
+        "xp": 1,
+        "score": 1
+      }
+    },
+    {
+      "tint": "#ff4fd8",
+      "health": 1,
+      "speed": 0.45,
+      "canShoot": false,
+      "reward": {
+        "xp": 1,
+        "score": 2
+      }
+    },
+    {
+      "tint": "#ff5555",
+      "health": 4,
+      "speed": 0.12,
+      "canShoot": true,
+      "reward": {
+        "xp": 3,
+        "score": 5
+      }
+    }
+  ],
+  "spawn": {
+    "delay": 1300,
+    "maxActive": 7
+  },
+  "difficulty": {
+    "everyScore": 60,
+    "increasePerLevel": 0.12
   }
 }

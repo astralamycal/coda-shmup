@@ -1,6 +1,6 @@
 export type SineMovementData = {
-  verticalSpeed: number;
-  targetY: number;
-  amplitude: number;
-  frequency: number;
-}
+    verticalSpeed: number;
+    targetY: number;
+    amplitude: number;
+    frequency: number;
+};
