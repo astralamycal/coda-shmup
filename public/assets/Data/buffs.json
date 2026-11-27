@@ -2,10 +2,10 @@
   { "label": "+1 PV max", "stat": "maxHealth", "value": 1 },
   { "label": "Dégâts +50 %", "stat": "damage", "value": 0.5 },
   { "label": "Cadence de tir +25 %", "stat": "fireRate", "value": 0.25 },
-  { "label": "XP gagnée +25 %", "stat": "xpGain", "value": 0.25 },
+  { "label": "EXP gagnée +25 %", "stat": "xpGain", "value": 0.25 },
   { "label": "Score +50 %", "stat": "scoreMultiplier", "value": 0.5 },
   { "label": "+1 balle par tir", "stat": "bulletCount", "value": 1 },
-  { "label": "Aimant à XP", "stat": "magnetRadius", "value": 200 },
+  { "label": "Aimant à EXP", "stat": "magnetRadius", "value": 200 },
   { "label": "Tir ciblé +1 (toutes les 10 s)", "stat": "homingBullets", "value": 1, "max": 3 },
-  { "label": "Trafic +25 % (plus d'XP)", "stat": "spawnRate", "value": 0.25, "max": 2 }
+  { "label": "Trafic +25 % (plus d'EXP)", "stat": "spawnRate", "value": 0.25, "max": 2 }
 ]

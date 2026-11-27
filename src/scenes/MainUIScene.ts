@@ -17,6 +17,8 @@ export default class MainUIScene extends Scene {
     private static readonly POPUP_OVERLAY_COLOR: number = 0x000000;
     private static readonly POPUP_OVERLAY_ALPHA: number = 0.7;
     private static readonly POPUP_CHOICE_SPACING: number = 160;
+    // The X of the future font looks like an H: the buff labels use a monospace font instead
+    private static readonly POPUP_CHOICE_FONT: string = '"Courier New", monospace';
 
     private _healthBarFill: GameObjects.Rectangle;
     private _scoreText: GameObjects.BitmapText;
@@ -104,7 +106,8 @@ export default class MainUIScene extends Scene {
 
         buffs.forEach((buff: BuffData, index: number) => {
             const choice = this.add.text(centerX, centerY + index * MainUIScene.POPUP_CHOICE_SPACING, buff.label,
-                {fontSize: '48px', color: '#7fdcff', fontFamily: 'future', backgroundColor: '#0b0b2a', padding: {x: 32, y: 16}})
+                {fontSize: '48px', color: '#7fdcff', fontFamily: MainUIScene.POPUP_CHOICE_FONT, fontStyle: 'bold',
+                    backgroundColor: '#0b0b2a', padding: {x: 32, y: 16}})
                 .setOrigin(0.5)
                 .setInteractive({useHandCursor: true});
 
