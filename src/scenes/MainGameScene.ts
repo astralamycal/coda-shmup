@@ -50,7 +50,7 @@ export default class MainGameScene extends Scene {
         this.entityManager.initEnemies();
         this.entityManager.initBoss();
         this.entityManager.initOrbs();
-        this.entityManager.initPowerUps();
+        this.entityManager.initHealthPickups();
         this.entityManager.initGroupCollisions();
 
         this.listenToLevelUp();
@@ -87,6 +87,8 @@ export default class MainGameScene extends Scene {
 
     private onBuffSelected(buff: BuffData) {
         this.buffManager.applyBuff(buff, this._player);
+        // Keys released during the pause were not seen by this scene: without a reset the car keeps driving
+        this.input.keyboard?.resetKeys();
         this.scene.resume();
     }
 

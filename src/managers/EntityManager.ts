@@ -6,13 +6,13 @@ import Bullet from '../entities/Bullet.ts';
 import Enemy from '../entities/Enemy.ts';
 import Entity from '../entities/Entity.ts';
 import Orb from '../entities/Orb.ts';
-import SpeedPowerUp from '../entities/SpeedPowerUp.ts';
+import HealthPickup from '../entities/HealthPickup.ts';
 import Player from '../entities/Player.ts';
 import GroupUtils from '../utils/GroupUtils.ts';
 import {BossData} from '../gameData/BossData.ts';
 import {EnemiesData} from '../gameData/EnemiesData.ts';
 import {EnemyTypeData} from '../gameData/EnemyTypeData.ts';
-import {ProgressionData, SpeedPowerUpData} from '../gameData/ProgressionData.ts';
+import {HealthPickupData, ProgressionData} from '../gameData/ProgressionData.ts';
 import GameConstants from '../GameConstants.ts';
 import RegistryConstants from '../RegistryConstants.ts';
 
@@ -42,8 +42,8 @@ export default class EntityManager extends Plugins.ScenePlugin {
     private _nextBossScore: number;
     private _bossSpawnCount: number;
     private _orbs: Physics.Arcade.Group;
-    private _powerUps: Physics.Arcade.Group;
-    private _speedPowerUpData: SpeedPowerUpData;
+    private _healthPickups: Physics.Arcade.Group;
+    private _healthPickupData: HealthPickupData;
 
     constructor(scene: Scene, pluginManager: Plugins.PluginManager) {
         super(scene, pluginManager, EntityManager.PLUGIN_KEY);
@@ -120,13 +120,14 @@ export default class EntityManager extends Plugins.ScenePlugin {
         GroupUtils.populate(EntityManager.ORB_POOL_SIZE, this._orbs);
     }
 
-    public initPowerUps() {
-        this._speedPowerUpData = (this.scene!.cache.json.get('progression') as ProgressionData).speedPowerUp;
-        this._powerUps = this.scene!.physics.add.group({
-            classType: SpeedPowerUp,
+    public initHealthPickups() {
+        this._healthPickupData = (this.scene!.cache.json.get('progression') as ProgressionData).healthPickup;
+        this._healthPickups = this.scene!.physics.add.group({
+            classType: HealthPickup,
             defaultKey: 'sprites',
-            createCallback: (powerUp) => {
-                (powerUp as SpeedPowerUp).init();
+            defaultFrame: HealthPickup.FRAME,
+            createCallback: (healthPickup) => {
+                (healthPickup as HealthPickup).init();
             }
         });
     }
@@ -146,9 +147,9 @@ export default class EntityManager extends Plugins.ScenePlugin {
             (player as Player).collectXp((orb as Orb).xpValue);
         });
 
-        this.scene!.physics.add.overlap(this._player, this._powerUps, (player, powerUp) => {
-            (powerUp as SpeedPowerUp).disable();
-            (player as Player).applySpeedBoost((powerUp as SpeedPowerUp).shipId, this._speedPowerUpData.duration);
+        this.scene!.physics.add.overlap(this._player, this._healthPickups, (player, healthPickup) => {
+            (healthPickup as HealthPickup).disable();
+            (player as Player).getComponent(Health)?.heal(this._healthPickupData.heal);
             this.scene!.sound.play(GameConstants.SoundKeys.PICKUP);
         });
 
@@ -184,17 +185,17 @@ export default class EntityManager extends Plugins.ScenePlugin {
         const scoreMultiplier = this._player.getComponent(PlayerStats)?.get('scoreMultiplier') ?? 1;
         this.scene!.registry.inc(RegistryConstants.Keys.PLAYER_SCORE, Math.round(enemy.reward.score * scoreMultiplier));
         this.spawnOrb(enemy.x, enemy.y, enemy.reward.xp);
-        this.trySpawnPowerUp(enemy.x, enemy.y);
+        this.trySpawnHealthPickup(enemy.x, enemy.y);
         this.scene!.sound.play(GameConstants.SoundKeys.EXPLOSION);
     }
 
-    private trySpawnPowerUp(x: number, y: number) {
-        if (Math.random() >= this._speedPowerUpData.dropChance) return;
+    private trySpawnHealthPickup(x: number, y: number) {
+        if (Math.random() >= this._healthPickupData.dropChance) return;
 
-        const powerUp = this._powerUps.get() as SpeedPowerUp;
-        if (!powerUp) return;
+        const healthPickup = this._healthPickups.get() as HealthPickup;
+        if (!healthPickup) return;
 
-        powerUp.enable(x, y, Phaser.Utils.Array.GetRandom(this._speedPowerUpData.shipIds));
+        healthPickup.enable(x, y);
     }
 
     private spawnOrb(x: number, y: number, xpValue: number) {

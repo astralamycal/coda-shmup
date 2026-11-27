@@ -32,8 +32,6 @@ export default class Player extends Entity {
     private _rateOfFire: number;
     private _lastShotTime: number;
     private _targets: Phaser.Physics.Arcade.Group;
-    private _selectedShipId: number;
-    private _speedBoostTimer: Phaser.Time.TimerEvent | undefined;
 
     constructor(scene: Scene, x: number, y: number) {
         super(scene, x, y, 'sprites');
@@ -107,23 +105,7 @@ export default class Player extends Entity {
         this._targets = targets;
     }
 
-    // Keys 1, 2 and 3: during a speed boost, the chosen ship comes back at the end of the boost
     public selectPlayerShip(playerShipDataId: number) {
-        this._selectedShipId = playerShipDataId;
-        if (!this._speedBoostTimer) this.useShip(playerShipDataId);
-    }
-
-    public applySpeedBoost(playerShipDataId: number, duration: number) {
-        this._speedBoostTimer?.remove();
-        this.useShip(playerShipDataId);
-
-        this._speedBoostTimer = this.scene.time.delayedCall(duration, () => {
-            this._speedBoostTimer = undefined;
-            this.useShip(this._selectedShipId);
-        });
-    }
-
-    private useShip(playerShipDataId: number) {
         const playerShipsData = this.scene.cache.json.get('playerShips') as PlayerShipsData;
         this._playerShipData = playerShipsData[playerShipDataId];
 

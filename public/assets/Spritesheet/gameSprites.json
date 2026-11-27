@@ -4,7 +4,7 @@
 			"image": "gameSprites.png",
 			"format": "RGBA8888",
 			"size": {
-				"w": 1010,
+				"w": 1020,
 				"h": 258
 			},
 			"scale": 1,
@@ -115,24 +115,24 @@
 					}
 				},
 				{
-					"filename": "orb",
+					"filename": "healthPickup",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 44,
-						"h": 44
+						"w": 54,
+						"h": 54
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 44,
-						"h": 44
+						"w": 54,
+						"h": 54
 					},
 					"frame": {
 						"x": 926,
 						"y": 2,
-						"w": 44,
-						"h": 44
+						"w": 54,
+						"h": 54
 					}
 				},
 				{
@@ -150,31 +150,31 @@
 						"h": 58
 					},
 					"frame": {
-						"x": 974,
+						"x": 984,
 						"y": 2,
 						"w": 34,
 						"h": 58
 					}
 				},
 				{
-					"filename": "spark",
+					"filename": "orb",
 					"rotated": false,
 					"trimmed": false,
 					"sourceSize": {
-						"w": 16,
-						"h": 16
+						"w": 44,
+						"h": 44
 					},
 					"spriteSourceSize": {
 						"x": 0,
 						"y": 0,
-						"w": 16,
-						"h": 16
+						"w": 44,
+						"h": 44
 					},
 					"frame": {
 						"x": 926,
-						"y": 50,
-						"w": 16,
-						"h": 16
+						"y": 60,
+						"w": 44,
+						"h": 44
 					}
 				},
 				{
@@ -196,6 +196,27 @@
 						"y": 74,
 						"w": 132,
 						"h": 68
+					}
+				},
+				{
+					"filename": "spark",
+					"rotated": false,
+					"trimmed": false,
+					"sourceSize": {
+						"w": 16,
+						"h": 16
+					},
+					"spriteSourceSize": {
+						"x": 0,
+						"y": 0,
+						"w": 16,
+						"h": 16
+					},
+					"frame": {
+						"x": 974,
+						"y": 64,
+						"w": 16,
+						"h": 16
 					}
 				},
 				{

@@ -5,7 +5,7 @@ import Player from '../entities/Player.ts';
 import GameConstants from '../GameConstants.ts';
 import RegistryConstants from '../RegistryConstants.ts';
 import {BuffData} from '../gameData/BuffData.ts';
-import UiStyles from '../ui/UiStyles.ts';
+import LevelUpPopup from '../ui/LevelUpPopup.ts';
 
 export default class MainUIScene extends Scene {
     private static readonly HEALTH_BAR_WIDTH: number = 400;
@@ -15,9 +15,6 @@ export default class MainUIScene extends Scene {
     private static readonly XP_BAR_HEIGHT: number = 24;
     private static readonly XP_BAR_COLOR: number = 0x39d6ff;
     private static readonly BAR_BACKGROUND_COLOR: number = 0x222222;
-    private static readonly POPUP_OVERLAY_COLOR: number = 0x000000;
-    private static readonly POPUP_OVERLAY_ALPHA: number = 0.7;
-    private static readonly POPUP_CHOICE_SPACING: number = 160;
 
     private _healthBarFill: GameObjects.Rectangle;
     private _scoreText: GameObjects.BitmapText;
@@ -113,47 +110,9 @@ export default class MainUIScene extends Scene {
     }
 
     private showLevelUpPopup(buffs: BuffData[]) {
-        const centerX: number = this.scale.width / 2;
-        const centerY: number = this.scale.height / 2;
-
-        const popup = this.add.container(0, 0);
-        popup.add(
-            this.add
-                .rectangle(
-                    0,
-                    0,
-                    this.scale.width,
-                    this.scale.height,
-                    MainUIScene.POPUP_OVERLAY_COLOR,
-                    MainUIScene.POPUP_OVERLAY_ALPHA
-                )
-                .setOrigin(0, 0)
+        new LevelUpPopup(this, buffs, (buff: BuffData) =>
+            this.game.events.emit(GameConstants.Events.BUFF_SELECTED_EVENT, buff)
         );
-        popup.add(
-            this.add
-                .bitmapText(centerX, centerY - MainUIScene.POPUP_CHOICE_SPACING, 'future-bmp', 'LEVEL UP', 96)
-                .setOrigin(0.5)
-        );
-
-        buffs.forEach((buff: BuffData, index: number) => {
-            const choice = this.add
-                .text(centerX, centerY + index * MainUIScene.POPUP_CHOICE_SPACING, buff.label, {
-                    fontSize: '48px',
-                    color: '#7fdcff',
-                    fontFamily: UiStyles.TEXT_FONT,
-                    fontStyle: 'bold',
-                    backgroundColor: '#0b0b2a',
-                    padding: {x: 32, y: 16}
-                })
-                .setOrigin(0.5)
-                .setInteractive({useHandCursor: true});
-
-            choice.on(Phaser.Input.Events.POINTER_DOWN, () => {
-                popup.destroy();
-                this.game.events.emit(GameConstants.Events.BUFF_SELECTED_EVENT, buff);
-            });
-            popup.add(choice);
-        });
     }
 
     private onPlayerScoreChanged(_: any, value: number) {
