@@ -30,7 +30,7 @@ Le jeu est publié sur itch.io par la GitHub Action à chaque push sur `main`.
 | Espace | Tirer |
 | Maj + flèches | Tourner la voiture pour viser |
 | 1, 2, 3 | Choisir la voiture (compacte, coupé, course) |
-| Souris | Choisir un bonus au passage de niveau |
+| ↑ ↓ puis Espace (ou souris) | Choisir un bonus au passage de niveau |
 | Flèches gauche / droite (accueil) | Régler le volume |
 | R | Recommencer la partie (debug) |
 | B | Faire apparaître le boss (debug) |
@@ -41,11 +41,11 @@ Le jeu est publié sur itch.io par la GitHub Action à chaque push sur `main`.
 - **Boss** : The Rock, avec un vine boom à l'arrivée et à chaque impact. Il revient plus fort à chaque apparition.
 - **Progression** : chaque ennemi lâche de l'EXP, attirée par un léger aimant. À chaque niveau, le joueur gagne 1 PV max et le jeu se fige pour proposer 3 bonus au hasard.
 - **Bonus** : PV max, dégâts, cadence, EXP, score, balles supplémentaires, aimant, tir ciblé et trafic. Les valeurs et les maximums sont dans `buffs.json`.
-- **Power-ups** : une voiture jaune lâchée de temps en temps, à ramasser pour conduire un modèle plus rapide pendant quelques secondes.
+- **Soins** : une croix rose lâchée de temps en temps par les ennemis, à ramasser pour regagner 1 PV. Le taux et le soin sont dans `progression.json`.
 - **Game feel** : barres de PV et d'EXP, explosions en particules, tremblement de caméra, flash à l'impact, musique, effets sonores, volume sauvegardé et meilleur score sauvegardé.
 
 ## Architecture
-- `src/entities` : les entités (joueur, ennemis, boss, balles, orbes, power-ups), toutes poolées avec un `enable()` qui remet leur état à zéro.
+- `src/entities` : les entités (joueur, ennemis, boss, balles, orbes, soins), toutes poolées avec un `enable()` qui remet leur état à zéro.
 - `src/components` : les composants Entity/Component (`Health`, `Weapon`, `Movement`, `SineMovement`, `Experience`, `PlayerStats`).
 - `src/managers` : les plugins Phaser. `EntityManager` gère les entités et les collisions, `BuffManager` les bonus, `SaveManager` la sauvegarde.
 - `src/scenes` : accueil, jeu, interface (au-dessus du jeu, elle ne fait qu'écouter des événements) et game over.

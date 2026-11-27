@@ -139,6 +139,15 @@ ImageDraw.Draw(orb).polygon([(12, 0), (24, 12), (12, 24), (0, 12)], fill=(255, 2
 ImageDraw.Draw(orb).polygon([(12, 6), (18, 12), (12, 18), (6, 12)], fill=(255, 255, 230, 255))
 glow(orb, (255, 200, 60), radius=5, margin=10).save(f'{OUT}/orb.png')
 
+# Health pickup: a pink cross, the color of the health bar
+cross = Image.new('RGBA', (30, 30), (0, 0, 0, 0))
+d = ImageDraw.Draw(cross)
+d.rectangle([10, 0, 19, 29], fill=(255, 90, 180, 255))
+d.rectangle([0, 10, 29, 19], fill=(255, 90, 180, 255))
+d.rectangle([13, 4, 16, 25], fill=(255, 230, 245, 255))
+d.rectangle([4, 13, 25, 16], fill=(255, 230, 245, 255))
+glow(cross, (255, 63, 164), radius=5, margin=12).save(f'{OUT}/healthPickup.png')
+
 # Particle for explosions
 spark = Image.new('RGBA', (6, 6), (255, 255, 255, 255))
 glow(spark, (255, 255, 255), radius=3, margin=5, strength=1).save(f'{OUT}/spark.png')

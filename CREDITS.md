@@ -5,7 +5,7 @@
 - Base du projet : [coda-shmup](https://github.com/rthery/coda-shmup) de Romain Théry, support du module Jeu Vidéo de CODA
 
 ## Graphismes
-- Voitures, orbe d'XP, étincelles et route : créés pour ce projet, générés par les scripts de `tools/assets/` (Python, Pillow)
+- Voitures, orbe d'XP, croix de soin, étincelles et route : créés pour ce projet, générés par les scripts de `tools/assets/` (Python, Pillow)
 - Boss : photo de Dwayne Johnson, source et licence à compléter (préparée avec `tools/assets/boss.py`)
 - Police kenvector future : [Kenney](https://kenney.nl/) (CC0)
 - Direction artistique : clin d'œil au mini-jeu Midnight Motorist (Freddy Fazbear's Pizzeria Simulator, Scott Cawthon). Aucun asset du jeu original n'est utilisé.

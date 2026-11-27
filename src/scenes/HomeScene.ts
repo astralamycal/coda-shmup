@@ -151,7 +151,7 @@ export default class HomeScene extends Phaser.Scene {
             .text(
                 this.scale.width / 2,
                 1720,
-                'FLÈCHES : CONDUIRE   ESPACE : TIRER   1 2 3 : VOITURE\nSOURIS : CHOISIR UN BUFF   R : REJOUER   B : BOSS',
+                'FLÈCHES : CONDUIRE   ESPACE : TIRER   1 2 3 : VOITURE\n↑ ↓ + ESPACE : CHOISIR UN BUFF   R : REJOUER   B : BOSS',
                 {
                     fontSize: '28px',
                     color: UiStyles.LIGHT_GREY,
