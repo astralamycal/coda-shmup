@@ -1,10 +1,11 @@
-import {Scene, Scenes, GameObjects} from 'phaser';
+import {Scene, Scenes} from 'phaser';
 import Experience from "../components/Experience.ts";
 import Health from "../components/Health.ts";
 import RegistryConstants from "../RegistryConstants.ts";
 import SaveManager from "../managers/SaveManager.ts";
 import SaveConstants from "../SaveConstants.ts";
 import BuffManager from "../managers/BuffManager.ts";
+import ScrollingRoad from "../ui/ScrollingRoad.ts";
 import EntityManager from "../managers/EntityManager.ts";
 import Player from "../entities/Player.ts";
 import {BuffData} from "../gameData/BuffData.ts";
@@ -12,10 +13,7 @@ import GameConstants from "../GameConstants.ts";
 
 export default class MainGameScene extends Scene {
     private static readonly BUFF_CHOICES_COUNT: number = 3;
-    private static readonly ROAD_TILE_SCALE: number = 2;
-    private static readonly ROAD_SCROLL_SPEED: number = 0.3; // in road texture px/ms
 
-    private bg: GameObjects.TileSprite;
     private saveManager: SaveManager;
     private entityManager: EntityManager;
     private buffManager: BuffManager;
@@ -32,8 +30,7 @@ export default class MainGameScene extends Scene {
         }
         this.saveManager?.load();
 
-        this.bg = this.add.tileSprite(0, 0, this.scale.width, this.scale.height, 'bg')
-            .setOrigin(0, 0).setTileScale(MainGameScene.ROAD_TILE_SCALE);
+        new ScrollingRoad(this);
 
         if (!this.entityManager) {
             console.error('EntityManager plugin not found');
@@ -98,10 +95,5 @@ export default class MainGameScene extends Scene {
         }
 
         this.scene.start(GameConstants.SceneKeys.GAME_OVER);
-    }
-
-    update(_timeSinceLaunch: number, deltaTime: number) {
-        // The road scrolls down: the player drives up
-        this.bg.tilePositionY -= MainGameScene.ROAD_SCROLL_SPEED * deltaTime;
     }
 }
