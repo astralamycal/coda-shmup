@@ -29,6 +29,46 @@
         "speed": 400,
         "damage": 1
       }
+    },
+    "scaling": {
+      "healthPerSpawn": 0.5,
+      "bulletsPerSpawn": 2
     }
+  },
+  "types": [
+    {
+      "tint": "#ffffff",
+      "health": 1,
+      "speed": 0.2,
+      "canShoot": true,
+      "reward": {
+        "xp": 1,
+        "score": 1
+      }
+    },
+    {
+      "tint": "#7dff7d",
+      "health": 1,
+      "speed": 0.45,
+      "canShoot": false,
+      "reward": {
+        "xp": 1,
+        "score": 2
+      }
+    },
+    {
+      "tint": "#ff7d7d",
+      "health": 4,
+      "speed": 0.12,
+      "canShoot": true,
+      "reward": {
+        "xp": 3,
+        "score": 5
+      }
+    }
+  ],
+  "difficulty": {
+    "everyScore": 50,
+    "increasePerLevel": 0.15
   }
 }

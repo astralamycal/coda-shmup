@@ -27,6 +27,12 @@ export default class Health extends Phaser.Events.EventEmitter implements ICompo
         this._entity = entity;
     }
 
+    // Full health with a new max, without events: used when an entity is taken back from the pool
+    public reset(max: number) {
+        this._max = max;
+        this._current = max;
+    }
+
     public increaseMax(amount: number) {
         if (!this.enabled || amount <= 0) return;
         this._max += amount;

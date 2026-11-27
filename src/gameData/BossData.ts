@@ -11,6 +11,13 @@ export type BossData = {
     spawn: BossSpawnData;
     movement: SineMovementData;
     weapon: WeaponData;
+    scaling: BossScalingData;
+}
+
+// Added at each new appearance of the boss
+export type BossScalingData = {
+    healthPerSpawn: number; // health multiplier added each time
+    bulletsPerSpawn: number; // bullets added to the spread shot each time
 }
 
 export type BossSpawnData = {

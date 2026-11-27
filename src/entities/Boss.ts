@@ -10,6 +10,7 @@ export default class Boss extends Entity {
     private static readonly HIT_FLASH_COLOR: number = 0xffffff;
     private static readonly HIT_FLASH_DURATION: number = 50;
 
+    private _data: BossData;
     private _tint: number;
     private _reward: RewardData;
     private _shootTimerConfig: Phaser.Types.Time.TimerEventConfig;
@@ -27,6 +28,7 @@ export default class Boss extends Entity {
         // Listen once, not on every enable(): the boss is reused from the pool
         this.getComponent(Health)?.on(Health.CHANGE_EVENT, this.onHealthChanged, this);
 
+        this._data = data;
         this._reward = data.reward;
         this._tint = Phaser.Display.Color.HexStringToColor(data.tint).color;
         this.setScale(data.scale);
@@ -42,15 +44,16 @@ export default class Boss extends Entity {
         this._shootTimer = this.scene.time.addEvent(this._shootTimerConfig);
     }
 
-    public enable(x: number, y: number) {
+    // spawnCount: how many bosses appeared before this one, the boss gets stronger each time
+    public enable(x: number, y: number, spawnCount: number) {
         this.enableBody(true, x, y, true, true);
         this.setTint(this._tint);
         this.getComponent(SineMovement)?.reset(x);
         this._shootTimer.reset(this._shootTimerConfig);
 
-        // Restore health without emitting events, in case the boss is reused from the pool
-        const health = this.getComponent(Health);
-        health?.heal(health.max, false);
+        const scaling = this._data.scaling;
+        this.getComponent(Health)?.reset(Math.round(this._data.health * (1 + spawnCount * scaling.healthPerSpawn)));
+        this.getComponent(Weapon)?.setBulletCount(this._data.weapon.bulletCount + spawnCount * scaling.bulletsPerSpawn);
     }
 
     public disable() {

@@ -10,6 +10,7 @@ import Player from "../entities/Player.ts";
 import GroupUtils from "../utils/GroupUtils.ts";
 import {BossData} from "../gameData/BossData.ts";
 import {EnemiesData} from "../gameData/EnemiesData.ts";
+import {EnemyTypeData} from "../gameData/EnemyTypeData.ts";
 import GameConstants from "../GameConstants.ts";
 import RegistryConstants from "../RegistryConstants.ts";
 
@@ -34,8 +35,10 @@ export default class EntityManager extends Plugins.ScenePlugin {
     private _enemies: Physics.Arcade.Group;
     private _enemyBullets: Physics.Arcade.Group;
     private _bosses: Physics.Arcade.Group;
+    private _enemiesData: EnemiesData;
     private _bossData: BossData;
     private _nextBossScore: number;
+    private _bossSpawnCount: number;
     private _orbs: Physics.Arcade.Group;
 
     constructor(scene: Scene, pluginManager: Plugins.PluginManager) {
@@ -65,6 +68,8 @@ export default class EntityManager extends Plugins.ScenePlugin {
     }
 
     public initEnemies(): Physics.Arcade.Group {
+        this._enemiesData = this.scene!.cache.json.get('enemies') as EnemiesData;
+
         this._enemyBullets = this.scene!.physics.add.group(this.bulletGroupConfig);
         GroupUtils.populate(256, this._enemyBullets);
 
@@ -92,8 +97,9 @@ export default class EntityManager extends Plugins.ScenePlugin {
     }
 
     public initBoss() {
-        this._bossData = (this.scene!.cache.json.get('enemies') as EnemiesData).boss;
+        this._bossData = this._enemiesData.boss;
         this._nextBossScore = this._bossData.spawn.firstScore;
+        this._bossSpawnCount = 0;
 
         // Only one boss at a time: the same one is taken back from the pool at each spawn
         this._bosses = this.scene!.physics.add.group({
@@ -202,7 +208,17 @@ export default class EntityManager extends Plugins.ScenePlugin {
         if (!boss)
             return;
 
-        boss.enable(this.scene!.cameras.main.centerX, -boss.displayHeight);
+        boss.enable(this.scene!.cameras.main.centerX, -boss.displayHeight, this._bossSpawnCount);
+        this._bossSpawnCount++;
+    }
+
+    // 1 at the start, then increasePerLevel more every everyScore points
+    private getDifficulty(): number {
+        const difficultyData = this._enemiesData.difficulty;
+        const score: number = this.scene!.registry.get(RegistryConstants.Keys.PLAYER_SCORE) ?? 0;
+        const level: number = Math.floor(score / difficultyData.everyScore);
+
+        return 1 + level * difficultyData.increasePerLevel;
     }
 
     private spawnEnemy() {
@@ -215,7 +231,8 @@ export default class EntityManager extends Plugins.ScenePlugin {
             return;
         }
 
-        enemy.enable(Phaser.Math.Between(64, this.scene!.cameras.main.width - 64), 0);
+        const type = Phaser.Utils.Array.GetRandom(this._enemiesData.types) as EnemyTypeData;
+        enemy.enable(Phaser.Math.Between(64, this.scene!.cameras.main.width - 64), 0, type, this.getDifficulty());
 
         this.game!.events.emit(GameConstants.Events.ENEMY_SPAWNED_EVENT, enemy);
 
