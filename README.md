@@ -1,30 +1,56 @@
-# Coda Shmup
-This is the base project used as teaching material for the gamedev module at Coda
+# Midnight the Rockist 2 + Vine Boom DLC
 
-## Suivre le cours commit par commit
-Il faut Node.js 24 (LTS) ou plus récent : vérifiez avec `node -v`.
+Shoot'em up vertical sur une route de nuit aux néons. Le joueur conduit une voiture, détruit les voitures ennemies, ramasse leur EXP et choisit un bonus à chaque niveau. Tous les quelques dizaines de points, The Rock débarque.
 
-Forkez ce repo, clonez votre fork, puis lancez une seule fois, à la racine du clone (macOS, Linux, ou Windows dans PowerShell ou Git Bash, pas dans cmd) :
+Projet de fin de module Jeu Vidéo (CODA, B2), construit sur la base du cours [coda-shmup](https://github.com/rthery/coda-shmup) avec [Phaser 3](https://phaser.io/) et TypeScript.
 
-```bash
-git config alias.go '!f() { export GIT_ASK_YESNO=false; h=$(git rev-list --reverse main | sed -n $(expr $1 + 0)p); git clean -fdq; git switch -q -fC cours $h && git log -1 --oneline; }; f'
-```
-
-Ensuite, pour aller au commit numéro 09 du cours (le numéro affiché sur les slides) :
+## Lancer le jeu
+Il faut Node.js 22.18 ou plus récent.
 
 ```bash
-git go 09
+npm install
+npm run dev-nolog      # puis ouvrir http://localhost:8080
 ```
 
-`git go` efface vos changements locaux et place la branche `cours` sur ce commit.
+Avant chaque commit :
 
-Le serveur de dev (`npm run dev-nolog`) peut rester lancé pendant `git go` : il recharge le jeu tout seul. Si un commit change `package.json`, arrêtez-le, lancez `npm install`, puis relancez-le.
+```bash
+npx tsc --noEmit       # vérifie les types (le build seul ne le fait pas)
+npm run build-nolog    # build de production dans dist/
+npm run format         # mise en forme Prettier de src/
+```
 
-## Matériel pédagogique
-- [COURS.md](COURS.md) : support de cours : concepts Phaser, patterns, processus dev, idées de features
-- [EVALUATION.md](EVALUATION.md) : sujet de l'évaluation notée (nouvel ennemi sinusoïdal + spread shot + config JSON, branche `eval` + PR)
-- [slides/slides-export.pdf](slides/slides-export.pdf) : slides du cours en 3 parties, en PDF
+Le jeu est publié sur itch.io par la GitHub Action à chaque push sur `main`.
 
-## Credits
-- [Phaser](https://phaser.io/) for the game engine
-- [Kenney](https://kenney.nl/) for the assets (CC0 license, see https://kenney.nl/support)
+## Contrôles
+
+| Touche | Action |
+| --- | --- |
+| Flèches gauche / droite | Conduire |
+| Espace | Tirer |
+| Maj + flèches | Tourner la voiture pour viser |
+| 1, 2, 3 | Choisir la voiture (compacte, coupé, course) |
+| Souris | Choisir un bonus au passage de niveau |
+| Flèches gauche / droite (accueil) | Régler le volume |
+| R | Recommencer la partie (debug) |
+| B | Faire apparaître le boss (debug) |
+
+## Fonctionnalités
+- **Évaluation** : le boss se déplace en sinusoïde et tire en éventail (spread shot). Son apparition, son mouvement et son tir se règlent dans `public/assets/Data/enemies.json`. Le détail est dans `TECH_PLAN.md`.
+- **Ennemis** : 3 types de voitures (normale, rapide, costaude), plus rapides et plus résistants à mesure que le score monte. Leurs phares clignotent avant de tirer.
+- **Boss** : The Rock, avec un vine boom à l'arrivée et à chaque impact. Il revient plus fort à chaque apparition.
+- **Progression** : chaque ennemi lâche de l'EXP, attirée par un léger aimant. À chaque niveau, le joueur gagne 1 PV max et le jeu se fige pour proposer 3 bonus au hasard.
+- **Bonus** : PV max, dégâts, cadence, EXP, score, balles supplémentaires, aimant, tir ciblé et trafic. Les valeurs et les maximums sont dans `buffs.json`.
+- **Power-ups** : une voiture jaune lâchée de temps en temps, à ramasser pour conduire un modèle plus rapide pendant quelques secondes.
+- **Game feel** : barres de PV et d'EXP, explosions en particules, tremblement de caméra, flash à l'impact, musique, effets sonores, volume sauvegardé et meilleur score sauvegardé.
+
+## Architecture
+- `src/entities` : les entités (joueur, ennemis, boss, balles, orbes, power-ups), toutes poolées avec un `enable()` qui remet leur état à zéro.
+- `src/components` : les composants Entity/Component (`Health`, `Weapon`, `Movement`, `SineMovement`, `Experience`, `PlayerStats`).
+- `src/managers` : les plugins Phaser. `EntityManager` gère les entités et les collisions, `BuffManager` les bonus, `SaveManager` la sauvegarde.
+- `src/scenes` : accueil, jeu, interface (au-dessus du jeu, elle ne fait qu'écouter des événements) et game over.
+- `src/gameData` et `public/assets/Data` : les données de jeu en JSON, chacune typée en TypeScript. L'équilibrage se fait sans toucher au code.
+- `tools/assets` : les scripts Python qui génèrent les sprites, la route et les sons. Voir `CREDITS.md`.
+
+## Crédits
+Voir [CREDITS.md](CREDITS.md).
