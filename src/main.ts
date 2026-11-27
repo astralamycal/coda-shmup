@@ -3,6 +3,7 @@ import GameOverScene from "./scenes/GameOverScene.ts";
 import HomeScene from "./scenes/HomeScene.ts";
 import MainGameScene from './scenes/MainGameScene.ts';
 import MainUIScene from "./scenes/MainUIScene.ts";
+import BuffManager from "./managers/BuffManager.ts";
 import EntityManager from "./managers/EntityManager.ts";
 import SaveManager from "./managers/SaveManager.ts";
 
@@ -29,7 +30,8 @@ const config: Types.Core.GameConfig = {
             {key: SaveManager.PLUGIN_KEY, plugin: SaveManager, mapping: SaveManager.MAPPING_NAME}
         ],
         scene: [
-            {key: EntityManager.PLUGIN_KEY, plugin: EntityManager, mapping: EntityManager.MAPPING_NAME}
+            {key: EntityManager.PLUGIN_KEY, plugin: EntityManager, mapping: EntityManager.MAPPING_NAME},
+            {key: BuffManager.PLUGIN_KEY, plugin: BuffManager, mapping: BuffManager.MAPPING_NAME}
         ]
     },
     // fps: { forceSetTimeOut: true, target: 120 },

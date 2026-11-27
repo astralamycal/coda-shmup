@@ -1,0 +1,9 @@
+[
+  { "label": "+1 PV max", "stat": "maxHealth", "value": 1 },
+  { "label": "Dégâts +50 %", "stat": "damage", "value": 0.5 },
+  { "label": "Cadence de tir +25 %", "stat": "fireRate", "value": 0.25 },
+  { "label": "XP gagnée +25 %", "stat": "xpGain", "value": 0.25 },
+  { "label": "Score +50 %", "stat": "scoreMultiplier", "value": 0.5 },
+  { "label": "+1 balle par tir", "stat": "bulletCount", "value": 1 },
+  { "label": "Aimant à XP", "stat": "magnetRadius", "value": 200 }
+]

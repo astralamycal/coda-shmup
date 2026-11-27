@@ -1,5 +1,5 @@
-import { Physics } from "phaser";
-import { BulletData } from "../gameData/BulletData.ts";
+import {Physics} from 'phaser';
+import {BulletData} from "../gameData/BulletData.ts";
 import Bullet from "../entities/Bullet.ts";
 import Entity from "../entities/Entity.ts";
 import IComponent from "./IComponent.ts";
@@ -10,16 +10,11 @@ export default class Weapon implements IComponent {
     public enabled: boolean = true;
 
     private readonly _bullets: Physics.Arcade.Group;
-    private readonly _bulletData: BulletData;
-    private readonly _bulletCount: number;
+    private _bulletData: BulletData;
+    private _bulletCount: number;
     private readonly _spreadAngle: number;
 
-    constructor(
-        bullets: Physics.Arcade.Group,
-        bulletData: BulletData,
-        bulletCount: number = 1,
-        spreadAngle: number = 0,
-    ) {
+    constructor(bullets: Physics.Arcade.Group, bulletData: BulletData, bulletCount: number = 1, spreadAngle: number = 0) {
         if (!bullets) {
             console.error("Weapon 'bullets' group cannot be null or undefined");
         }
@@ -30,20 +25,31 @@ export default class Weapon implements IComponent {
         this._spreadAngle = spreadAngle;
     }
 
+    public setBulletCount(bulletCount: number) {
+        this._bulletCount = bulletCount;
+    }
+
+    public setDamage(damage: number) {
+        this._bulletData = {...this._bulletData, damage: damage};
+    }
+
+    // Shoots bulletCount bullets, fanned out over spreadAngle degrees around the source forward direction
     public shoot(source: Entity) {
-        if (!this.enabled || !this._bullets) return;
+        if (!this.enabled || !this._bullets)
+            return;
 
         const angleStep: number = this.getAngleStep();
-        const firstAngle: number =
-            source.angle - (angleStep * (this._bulletCount - 1)) / 2;
+        const firstAngle: number = source.angle - angleStep * (this._bulletCount - 1) / 2;
         for (let i = 0; i < this._bulletCount; i++) {
             this.shootBullet(source, firstAngle + angleStep * i);
         }
     }
 
     private getAngleStep(): number {
-        if (this._bulletCount <= 1) return 0;
+        if (this._bulletCount <= 1)
+            return 0;
 
+        // On a full circle, the last bullet would overlap the first one
         if (this._spreadAngle >= Weapon.FULL_CIRCLE)
             return Weapon.FULL_CIRCLE / this._bulletCount;
 
@@ -52,22 +58,13 @@ export default class Weapon implements IComponent {
 
     private shootBullet(source: Entity, angle: number) {
         const bullet: Bullet = this._bullets.get() as Bullet;
-        if (!bullet) return;
+        if (!bullet)
+            return;
 
-        const direction: Phaser.Math.Vector2 = new Phaser.Math.Vector2(
-            1,
-            0,
-        ).rotate(Phaser.Math.DegToRad(angle));
-        const velocity: Phaser.Math.Vector2 = direction
-            .clone()
-            .scale(this._bulletData.speed);
+        const direction: Phaser.Math.Vector2 = new Phaser.Math.Vector2(1, 0).rotate(Phaser.Math.DegToRad(angle));
+        const velocity: Phaser.Math.Vector2 = direction.clone().scale(this._bulletData.speed);
         const spawnDistance: number = source.arcadeBody.radius;
-        bullet.enable(
-            source.x + direction.x * spawnDistance,
-            source.y + direction.y * spawnDistance,
-            velocity.x,
-            velocity.y,
-            this._bulletData,
-        );
+        bullet.enable(source.x + direction.x * spawnDistance, source.y + direction.y * spawnDistance,
+            velocity.x, velocity.y, this._bulletData);
     }
 }

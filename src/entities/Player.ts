@@ -1,12 +1,18 @@
 import {Input, Scene} from "phaser";
 import {PlayerShipData, PlayerShipsData} from "../gameData/PlayerShipsData.ts";
 import type {BulletData} from "../gameData/BulletData.ts";
+import {ProgressionData} from "../gameData/ProgressionData.ts";
 import Entity from './Entity.ts';
+import Experience from "../components/Experience.ts";
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
+import PlayerStats from "../components/PlayerStats.ts";
 import Weapon from "../components/Weapon.ts";
 
 export default class Player extends Entity {
+    private static readonly BASE_RATE_OF_FIRE: number = 0.5; // seconds between two shots
+    private static readonly SPREAD_ANGLE: number = 20; // used once the player shoots several bullets
+
     private readonly _bulletData: BulletData = {
         width: 12,
         height: 4,
@@ -35,13 +41,21 @@ export default class Player extends Entity {
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
         this.addComponent(new Health(3, this));
         this.addComponent(new Movement());
-        this.addComponent(new Weapon(bulletsGroup, this._bulletData));
+        this.addComponent(new Weapon(bulletsGroup, this._bulletData, 1, Player.SPREAD_ANGLE));
+        this.addComponent(new PlayerStats());
+        this.getComponent(PlayerStats)?.on(PlayerStats.CHANGE_EVENT, this.applyStats, this);
+
+        const progressionData = this.scene.cache.json.get('progression') as ProgressionData;
+        this.addComponent(new Experience(progressionData));
+        this.getComponent(Experience)?.on(Experience.LEVEL_UP_EVENT, () => {
+            this.getComponent(Health)?.increaseMax(progressionData.healthPerLevel);
+        });
 
         this.angle = -90;
 
         this.selectPlayerShip(1);
 
-        this._rateOfFire = 0.5;
+        this._rateOfFire = Player.BASE_RATE_OF_FIRE;
         this._lastShotTime = 0;
 
         this.getComponent(Health)?.on(Health.CHANGE_EVENT, () => {
@@ -53,6 +67,22 @@ export default class Player extends Entity {
                     this.arcadeBody.setEnable(true);
             });
         });
+    }
+
+    public collectXp(amount: number) {
+        const xpGain = this.getComponent(PlayerStats)?.get('xpGain') ?? 1;
+        this.getComponent(Experience)?.add(amount * xpGain);
+    }
+
+    private applyStats() {
+        const stats = this.getComponent(PlayerStats);
+        if (!stats)
+            return;
+
+        const weapon = this.getComponent(Weapon);
+        weapon?.setDamage(this._bulletData.damage * stats.get('damage'));
+        weapon?.setBulletCount(stats.get('bulletCount'));
+        this._rateOfFire = Player.BASE_RATE_OF_FIRE / stats.get('fireRate');
     }
 
     public selectPlayerShip(playerShipDataId: number) {

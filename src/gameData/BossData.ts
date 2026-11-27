@@ -1,17 +1,19 @@
 import {SineMovementData} from "./SineMovementData.ts";
 import {WeaponData} from "./WeaponData.ts";
+import {RewardData} from "./RewardData.ts";
 
 export type BossData = {
-  frame: string;
-  tint: string; // "#rrggbb"
-  scale: number;
-  health: number;
-  spawn: BossSpawnData;
-  movement: SineMovementData;
-  weapon: WeaponData;
+    frame: string;
+    tint: string; // "#rrggbb"
+    scale: number;
+    health: number;
+    reward: RewardData;
+    spawn: BossSpawnData;
+    movement: SineMovementData;
+    weapon: WeaponData;
 }
-  
+
 export type BossSpawnData = {
-  firstScore: number; // score at which the first boss appears
-  everyScore: number; // then a new boss every X points
+    firstScore: number; // score at which the first boss appears
+    everyScore: number; // then a new boss every X points
 }

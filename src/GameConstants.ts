@@ -2,6 +2,8 @@ export default class GameConstants {
     public static readonly Events = Object.freeze({
         PLAYER_SPAWNED_EVENT: "playerSpawned",
         ENEMY_SPAWNED_EVENT: "enemySpawned",
+        LEVEL_UP_CHOICES_EVENT: "levelUpChoices",
+        BUFF_SELECTED_EVENT: "buffSelected",
     } as const);
 
     public static readonly SceneKeys = Object.freeze({

@@ -4,18 +4,20 @@
     "tint": "#b05cff",
     "scale": 2,
     "health": 30,
+    "reward": {
+      "xp": 10,
+      "score": 20
+    },
     "spawn": {
       "firstScore": 20,
       "everyScore": 50
     },
-    
     "movement": {
       "verticalSpeed": 0.1,
       "targetY": 400,
       "amplitude": 300,
       "frequency": 0.0015
     },
-    
     "weapon": {
       "bulletCount": 7,
       "spreadAngle": 60,

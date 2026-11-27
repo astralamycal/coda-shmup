@@ -8,7 +8,7 @@ export default class Health extends Phaser.Events.EventEmitter implements ICompo
     public static readonly DEATH_EVENT: string = 'death';
 
     private _current: number;
-    private readonly _max: number;
+    private _max: number;
     private readonly _entity: Entity;
 
     public get current(): number {
@@ -25,6 +25,12 @@ export default class Health extends Phaser.Events.EventEmitter implements ICompo
         this._current = value;
         this._max = value;
         this._entity = entity;
+    }
+
+    public increaseMax(amount: number) {
+        if (!this.enabled || amount <= 0) return;
+        this._max += amount;
+        this.heal(amount);
     }
 
     public damage(amount: number, emitEvents: boolean = true): void {

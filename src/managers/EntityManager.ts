@@ -1,21 +1,23 @@
 import {GameObjects, Plugins, Physics, Scene, Scenes} from "phaser";
 import Health from "../components/Health.ts";
+import PlayerStats from "../components/PlayerStats.ts";
+import Boss from "../entities/Boss.ts";
 import Bullet from "../entities/Bullet.ts";
 import Enemy from "../entities/Enemy.ts";
+import Entity from "../entities/Entity.ts";
+import Orb from "../entities/Orb.ts";
 import Player from "../entities/Player.ts";
 import GroupUtils from "../utils/GroupUtils.ts";
-import GameConstants from "../GameConstants.ts";
-import RegistryConstants from "../RegistryConstants.ts";
-
-import Boss from "../entities/Boss.ts";
-import Entity from "../entities/Entity.ts";
 import {BossData} from "../gameData/BossData.ts";
 import {EnemiesData} from "../gameData/EnemiesData.ts";
+import GameConstants from "../GameConstants.ts";
+import RegistryConstants from "../RegistryConstants.ts";
 
 export default class EntityManager extends Plugins.ScenePlugin {
     public static readonly PLUGIN_KEY: string = 'EntityManager';
     public static readonly MAPPING_NAME: string = 'entityManager';
     private static readonly BOSS_CONTACT_DAMAGE: number = 1;
+    private static readonly ORB_POOL_SIZE: number = 32;
 
     // noinspection JSUnusedGlobalSymbols
     private readonly bulletGroupConfig = {
@@ -34,6 +36,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
     private _bosses: Physics.Arcade.Group;
     private _bossData: BossData;
     private _nextBossScore: number;
+    private _orbs: Physics.Arcade.Group;
 
     constructor(scene: Scene, pluginManager: Plugins.PluginManager) {
         super(scene, pluginManager, EntityManager.PLUGIN_KEY);
@@ -71,6 +74,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
             defaultFrame: 'ufoRed',
             createCallback: (enemy) => {
                 (enemy as Enemy).init(this._enemyBullets);
+                this.listenToDeath(enemy as Enemy);
             }
         });
 
@@ -91,7 +95,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
         this._bossData = (this.scene!.cache.json.get('enemies') as EnemiesData).boss;
         this._nextBossScore = this._bossData.spawn.firstScore;
 
-        // same one taken from pool at each spawn
+        // Only one boss at a time: the same one is taken back from the pool at each spawn
         this._bosses = this.scene!.physics.add.group({
             classType: Boss,
             maxSize: 1,
@@ -99,16 +103,26 @@ export default class EntityManager extends Plugins.ScenePlugin {
             defaultFrame: this._bossData.frame,
             createCallback: (boss) => {
                 (boss as Boss).init(this._enemyBullets, this._bossData);
+                this.listenToDeath(boss as Boss);
             }
         });
 
-        this.scene!.registry.events.on(RegistryConstants.Events.PLAYER_SCORE_CHANGE,
-            this.onScoreChanged, this);
-        
+        this.scene!.registry.events.on(RegistryConstants.Events.PLAYER_SCORE_CHANGE, this.onScoreChanged, this);
         this.scene!.events.once(Scenes.Events.SHUTDOWN, () => {
-            this.scene!.registry.events.off(RegistryConstants.Events.PLAYER_SCORE_CHANGE,
-            this.onScoreChanged, this);
+            this.scene!.registry.events.off(RegistryConstants.Events.PLAYER_SCORE_CHANGE, this.onScoreChanged, this);
         });
+    }
+
+    public initOrbs() {
+        this._orbs = this.scene!.physics.add.group({
+            classType: Orb,
+            defaultKey: 'sprites',
+            defaultFrame: Orb.FRAME,
+            createCallback: (orb) => {
+                (orb as Orb).init(this._player);
+            }
+        });
+        GroupUtils.populate(EntityManager.ORB_POOL_SIZE, this._orbs);
     }
 
     public initGroupCollisions() {
@@ -120,8 +134,14 @@ export default class EntityManager extends Plugins.ScenePlugin {
             this.onPlayerBulletHit(bullet as Bullet, boss as Boss);
         });
 
+        this.scene!.physics.add.overlap(this._player, this._orbs, (player, orb) => {
+            (orb as Orb).disable();
+            (player as Player).collectXp((orb as Orb).xpValue);
+        });
+
         this.scene!.physics.add.overlap(this._player, this._bosses, (player) => {
             (player as Player).getComponent(Health)?.damage(EntityManager.BOSS_CONTACT_DAMAGE);
+
             this.scene?.cameras.main.shake(100, 0.03);
         });
 
@@ -133,8 +153,6 @@ export default class EntityManager extends Plugins.ScenePlugin {
         });
 
         this.scene!.physics.add.overlap(this._player, this._enemies, (player, enemy) => {
-            this.scene!.registry.inc(RegistryConstants.Keys.PLAYER_SCORE);
-
             const enemyHealth = (enemy as Enemy).getComponent(Health);
             enemyHealth?.damage(enemyHealth?.max);
 
@@ -147,8 +165,25 @@ export default class EntityManager extends Plugins.ScenePlugin {
         console.log("[EntityManager] Group collisions initialized");
     }
 
+    private listenToDeath(enemy: Enemy | Boss) {
+        enemy.getComponent(Health)?.on(Health.DEATH_EVENT, () => this.onEnemyKilled(enemy));
+    }
+
+    private onEnemyKilled(enemy: Enemy | Boss) {
+        const scoreMultiplier = this._player.getComponent(PlayerStats)?.get('scoreMultiplier') ?? 1;
+        this.scene!.registry.inc(RegistryConstants.Keys.PLAYER_SCORE, Math.round(enemy.reward.score * scoreMultiplier));
+        this.spawnOrb(enemy.x, enemy.y, enemy.reward.xp);
+    }
+
+    private spawnOrb(x: number, y: number, xpValue: number) {
+        const orb = this._orbs.get() as Orb;
+        if (!orb)
+            return;
+
+        orb.enable(x, y, xpValue);
+    }
+
     private onPlayerBulletHit(bullet: Bullet, target: Entity) {
-        this.scene!.registry.inc(RegistryConstants.Keys.PLAYER_SCORE);
         bullet.disable();
         target.getComponent(Health)?.damage(bullet.damage);
     }
@@ -156,16 +191,17 @@ export default class EntityManager extends Plugins.ScenePlugin {
     private onScoreChanged(_: any, score: number) {
         if (score < this._nextBossScore)
             return;
-        
+
         this._nextBossScore += this._bossData.spawn.everyScore;
         this.spawnBoss();
     }
-    
+
     private spawnBoss() {
-        // Null when previous boss alive
+        // Null when the previous boss is still alive
         const boss = this._bosses.get() as Boss;
         if (!boss)
-        return;
+            return;
+
         boss.enable(this.scene!.cameras.main.centerX, -boss.displayHeight);
     }
 

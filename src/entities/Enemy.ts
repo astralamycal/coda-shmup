@@ -3,8 +3,11 @@ import Entity from './Entity.ts';
 import Health from "../components/Health.ts";
 import Movement from "../components/Movement.ts";
 import Weapon from "../components/Weapon.ts";
+import {RewardData} from "../gameData/RewardData.ts";
 
 export default class Enemy extends Entity {
+    private static readonly REWARD: RewardData = {xp: 1, score: 1};
+
     private readonly _bulletData: BulletData = {
         width: 12,
         height: 12,
@@ -14,6 +17,10 @@ export default class Enemy extends Entity {
     };
     private _shootTimerConfig: Phaser.Types.Time.TimerEventConfig;
     private _shootTimer: Phaser.Time.TimerEvent;
+
+    public get reward(): RewardData {
+        return Enemy.REWARD;
+    }
 
     public init(bulletsGroup: Phaser.Physics.Arcade.Group) {
         this.addComponent(new Health(1, this));
