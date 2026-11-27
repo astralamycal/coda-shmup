@@ -1,9 +1,9 @@
-import {Loader} from "phaser";
-import GameConstants from "../GameConstants.ts";
-import SaveManager from "../managers/SaveManager.ts";
-import SaveConstants from "../SaveConstants.ts";
-import ScrollingRoad from "../ui/ScrollingRoad.ts";
-import UiStyles from "../ui/UiStyles.ts";
+import {Loader} from 'phaser';
+import GameConstants from '../GameConstants.ts';
+import SaveManager from '../managers/SaveManager.ts';
+import SaveConstants from '../SaveConstants.ts';
+import ScrollingRoad from '../ui/ScrollingRoad.ts';
+import UiStyles from '../ui/UiStyles.ts';
 
 export default class HomeScene extends Phaser.Scene {
     private static readonly DEFAULT_VOLUME_PERCENT: number = 50;
@@ -29,7 +29,8 @@ export default class HomeScene extends Phaser.Scene {
         const progressBox = this.add.graphics();
         progressBox.fillStyle(0x222222, 0.8);
         progressBox.fillRect(0, y, width, 64);
-        this.load.on(Loader.Events.PROGRESS, function (value: number) { // 0-1
+        this.load.on(Loader.Events.PROGRESS, function (value: number) {
+            // 0-1
             progressBar.clear();
             progressBar.fillStyle(0xffffff, 1);
             progressBar.fillRect(0, y, width * value, 64);
@@ -67,8 +68,7 @@ export default class HomeScene extends Phaser.Scene {
 
         // Ignore the OS key repeat: SPACE may still be held from the previous game
         this.input.keyboard?.on('keydown-SPACE', (event: KeyboardEvent) => {
-            if (event.repeat)
-                return;
+            if (event.repeat) return;
 
             this.scene.launch(GameConstants.SceneKeys.MAIN_UI);
             this.scene.start(GameConstants.SceneKeys.MAIN_GAME);
@@ -77,15 +77,38 @@ export default class HomeScene extends Phaser.Scene {
 
     private createTitle() {
         const centerX: number = this.scale.width / 2;
-        UiStyles.addGlow(this.add.text(centerX, 540, 'MIDNIGHT',
-            {fontSize: '128px', color: UiStyles.WHITE, fontFamily: UiStyles.TITLE_FONT}).setOrigin(0.5), UiStyles.NEON_BLUE);
-        UiStyles.addGlow(this.add.text(centerX, 680, 'THE ROCKIST 2',
-            {fontSize: '92px', color: UiStyles.WHITE, fontFamily: UiStyles.TITLE_FONT}).setOrigin(0.5), UiStyles.NEON_BLUE);
+        UiStyles.addGlow(
+            this.add
+                .text(centerX, 540, 'MIDNIGHT', {
+                    fontSize: '128px',
+                    color: UiStyles.WHITE,
+                    fontFamily: UiStyles.TITLE_FONT
+                })
+                .setOrigin(0.5),
+            UiStyles.NEON_BLUE
+        );
+        UiStyles.addGlow(
+            this.add
+                .text(centerX, 680, 'THE ROCKIST 2', {
+                    fontSize: '92px',
+                    color: UiStyles.WHITE,
+                    fontFamily: UiStyles.TITLE_FONT
+                })
+                .setOrigin(0.5),
+            UiStyles.NEON_BLUE
+        );
 
         // Tilted like a sticker on the game box
-        const dlc = UiStyles.addGlow(this.add.text(centerX + 120, 820, '+ VINE BOOM DLC',
-            {fontSize: '56px', color: UiStyles.NEON_PINK, fontFamily: UiStyles.TITLE_FONT}).setOrigin(0.5), UiStyles.NEON_PINK)
-            .setAngle(HomeScene.DLC_ANGLE);
+        const dlc = UiStyles.addGlow(
+            this.add
+                .text(centerX + 120, 820, '+ VINE BOOM DLC', {
+                    fontSize: '56px',
+                    color: UiStyles.NEON_PINK,
+                    fontFamily: UiStyles.TITLE_FONT
+                })
+                .setOrigin(0.5),
+            UiStyles.NEON_PINK
+        ).setAngle(HomeScene.DLC_ANGLE);
         this.tweens.add({
             targets: dlc,
             scale: HomeScene.DLC_PULSE_SCALE,
@@ -97,28 +120,63 @@ export default class HomeScene extends Phaser.Scene {
 
     private createBestScore() {
         const bestScore: number = Number(this.saveManager.getData(SaveConstants.Keys.PLAYER_BEST_SCORE) ?? 0);
-        UiStyles.addGlow(this.add.text(this.scale.width / 2, 960, 'BEST ' + UiStyles.formatScore(bestScore),
-            {fontSize: '44px', color: UiStyles.NEON_ORANGE, fontFamily: UiStyles.TITLE_FONT}).setOrigin(0.5), UiStyles.NEON_ORANGE);
+        UiStyles.addGlow(
+            this.add
+                .text(this.scale.width / 2, 960, 'BEST ' + UiStyles.formatScore(bestScore), {
+                    fontSize: '44px',
+                    color: UiStyles.NEON_ORANGE,
+                    fontFamily: UiStyles.TITLE_FONT
+                })
+                .setOrigin(0.5),
+            UiStyles.NEON_ORANGE
+        );
     }
 
     private createStartPrompt() {
-        const prompt = UiStyles.addGlow(this.add.text(this.scale.width / 2, 1260, 'PRESS SPACE TO START',
-            {fontSize: '52px', color: UiStyles.WHITE, fontFamily: UiStyles.TITLE_FONT}).setOrigin(0.5), UiStyles.NEON_BLUE);
+        const prompt = UiStyles.addGlow(
+            this.add
+                .text(this.scale.width / 2, 1260, 'PRESS SPACE TO START', {
+                    fontSize: '52px',
+                    color: UiStyles.WHITE,
+                    fontFamily: UiStyles.TITLE_FONT
+                })
+                .setOrigin(0.5),
+            UiStyles.NEON_BLUE
+        );
         UiStyles.blink(prompt);
     }
 
     private createControlsHint() {
-        this.add.text(this.scale.width / 2, 1720,
-            'FLÈCHES : CONDUIRE   ESPACE : TIRER   1 2 3 : VOITURE\nSOURIS : CHOISIR UN BUFF   R : REJOUER   B : BOSS',
-            {fontSize: '28px', color: UiStyles.LIGHT_GREY, fontFamily: UiStyles.TEXT_FONT, align: 'center', lineSpacing: 12})
+        this.add
+            .text(
+                this.scale.width / 2,
+                1720,
+                'FLÈCHES : CONDUIRE   ESPACE : TIRER   1 2 3 : VOITURE\nSOURIS : CHOISIR UN BUFF   R : REJOUER   B : BOSS',
+                {
+                    fontSize: '28px',
+                    color: UiStyles.LIGHT_GREY,
+                    fontFamily: UiStyles.TEXT_FONT,
+                    align: 'center',
+                    lineSpacing: 12
+                }
+            )
             .setOrigin(0.5);
     }
 
     private createVolumeOption() {
-        this._volumePercent = this.saveManager.getData(SaveConstants.Keys.VOLUME_PERCENT) ?? HomeScene.DEFAULT_VOLUME_PERCENT;
+        this._volumePercent =
+            this.saveManager.getData(SaveConstants.Keys.VOLUME_PERCENT) ?? HomeScene.DEFAULT_VOLUME_PERCENT;
 
-        this._volumeText = UiStyles.addGlow(this.add.text(this.scale.width / 2, 1380, '',
-            {fontSize: '40px', color: UiStyles.NEON_BLUE, fontFamily: UiStyles.TITLE_FONT}).setOrigin(0.5), UiStyles.NEON_BLUE);
+        this._volumeText = UiStyles.addGlow(
+            this.add
+                .text(this.scale.width / 2, 1380, '', {
+                    fontSize: '40px',
+                    color: UiStyles.NEON_BLUE,
+                    fontFamily: UiStyles.TITLE_FONT
+                })
+                .setOrigin(0.5),
+            UiStyles.NEON_BLUE
+        );
         this.applyVolume();
 
         this.input.keyboard?.on('keydown-LEFT', () => this.changeVolume(-HomeScene.VOLUME_STEP_PERCENT));

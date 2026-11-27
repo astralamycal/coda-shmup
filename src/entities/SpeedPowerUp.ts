@@ -1,6 +1,6 @@
 import Entity from './Entity.ts';
-import Movement from "../components/Movement.ts";
-import {PlayerShipsData} from "../gameData/PlayerShipsData.ts";
+import Movement from '../components/Movement.ts';
+import {PlayerShipsData} from '../gameData/PlayerShipsData.ts';
 
 // A car to pick up: the player drives it for a few seconds
 export default class SpeedPowerUp extends Entity {
@@ -50,7 +50,6 @@ export default class SpeedPowerUp extends Entity {
 
         this.getComponent(Movement)?.moveVertically(this, deltaTime);
 
-        if (this.y > this.scene.cameras.main.height + this.displayHeight)
-            this.disable();
+        if (this.y > this.scene.cameras.main.height + this.displayHeight) this.disable();
     }
 }

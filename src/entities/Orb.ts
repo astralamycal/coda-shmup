@@ -1,6 +1,6 @@
 import Entity from './Entity.ts';
-import PlayerStats from "../components/PlayerStats.ts";
-import Player from "./Player.ts";
+import PlayerStats from '../components/PlayerStats.ts';
+import Player from './Player.ts';
 
 export default class Orb extends Entity {
     public static readonly FRAME: string = 'orb';
@@ -43,14 +43,15 @@ export default class Orb extends Entity {
         this.y += this._velocity.y * deltaTime;
 
         // Recycle orbs the player didn't catch
-        if (this.y > this.scene.cameras.main.height + this.displayHeight)
-            this.disable();
+        if (this.y > this.scene.cameras.main.height + this.displayHeight) this.disable();
     }
 
     private updateWantedVelocity() {
         if (this.isInMagnetRange()) {
-            this._wantedVelocity.set(this._player.x - this.x, this._player.y - this.y)
-                .normalize().scale(Orb.MAGNET_SPEED);
+            this._wantedVelocity
+                .set(this._player.x - this.x, this._player.y - this.y)
+                .normalize()
+                .scale(Orb.MAGNET_SPEED);
         } else {
             this._wantedVelocity.set(0, Orb.FALL_SPEED);
         }

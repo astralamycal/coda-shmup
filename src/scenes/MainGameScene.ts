@@ -1,15 +1,15 @@
 import {Scene, Scenes} from 'phaser';
-import Experience from "../components/Experience.ts";
-import Health from "../components/Health.ts";
-import RegistryConstants from "../RegistryConstants.ts";
-import SaveManager from "../managers/SaveManager.ts";
-import SaveConstants from "../SaveConstants.ts";
-import BuffManager from "../managers/BuffManager.ts";
-import ScrollingRoad from "../ui/ScrollingRoad.ts";
-import EntityManager from "../managers/EntityManager.ts";
-import Player from "../entities/Player.ts";
-import {BuffData} from "../gameData/BuffData.ts";
-import GameConstants from "../GameConstants.ts";
+import Experience from '../components/Experience.ts';
+import Health from '../components/Health.ts';
+import RegistryConstants from '../RegistryConstants.ts';
+import SaveManager from '../managers/SaveManager.ts';
+import SaveConstants from '../SaveConstants.ts';
+import BuffManager from '../managers/BuffManager.ts';
+import ScrollingRoad from '../ui/ScrollingRoad.ts';
+import EntityManager from '../managers/EntityManager.ts';
+import Player from '../entities/Player.ts';
+import {BuffData} from '../gameData/BuffData.ts';
+import GameConstants from '../GameConstants.ts';
 
 export default class MainGameScene extends Scene {
     private static readonly BUFF_CHOICES_COUNT: number = 3;
@@ -38,11 +38,15 @@ export default class MainGameScene extends Scene {
 
         const player = this.entityManager.initAndSpawnPlayer();
         this._player = player;
-        player.getComponent(Health)?.once(Health.DEATH_EVENT, () => {
-            // Hide the player and let its explosion play before showing the game over screen
-            player.disableBody(true, true);
-            this.time.delayedCall(1000, this.endGame, [], this);
-        }, this);
+        player.getComponent(Health)?.once(
+            Health.DEATH_EVENT,
+            () => {
+                // Hide the player and let its explosion play before showing the game over screen
+                player.disableBody(true, true);
+                this.time.delayedCall(1000, this.endGame, [], this);
+            },
+            this
+        );
         this.entityManager.initEnemies();
         this.entityManager.initBoss();
         this.entityManager.initOrbs();
@@ -54,7 +58,9 @@ export default class MainGameScene extends Scene {
         if (this.input.keyboard) {
             // Debug keys: R restarts the game, B makes the boss appear now
             this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R).on('down', () => this.scene.restart());
-            this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.B).on('down', () => this.entityManager.spawnBoss());
+            this.input.keyboard
+                .addKey(Phaser.Input.Keyboard.KeyCodes.B)
+                .on('down', () => this.entityManager.spawnBoss());
         } else {
             console.error('No keyboard input');
         }

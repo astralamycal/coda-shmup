@@ -1,4 +1,4 @@
-import {GameObjects, Scene} from "phaser";
+import {GameObjects, Scene} from 'phaser';
 
 // The neon road, scrolling down as if the player was driving up
 export default class ScrollingRoad extends GameObjects.TileSprite {

@@ -5,4 +5,4 @@ export type BulletData = {
     outline?: string; // optional "#rrggbb" border, to make bullets easier to see
     speed: number;
     damage: number;
-}
+};

@@ -22,8 +22,7 @@ export default class SaveManager extends Plugins.BasePlugin {
     public setData(key: string, value: any, save: boolean = true): void {
         this._dataManager.set(key, value);
 
-        if (save)
-            this.save();
+        if (save) this.save();
     }
 
     public getData(key: string): any {

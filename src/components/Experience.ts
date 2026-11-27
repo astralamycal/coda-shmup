@@ -1,5 +1,5 @@
-import IComponent from "./IComponent.ts";
-import {ProgressionData} from "../gameData/ProgressionData.ts";
+import IComponent from './IComponent.ts';
+import {ProgressionData} from '../gameData/ProgressionData.ts';
 
 export default class Experience extends Phaser.Events.EventEmitter implements IComponent {
     public enabled: boolean = true;
@@ -24,12 +24,10 @@ export default class Experience extends Phaser.Events.EventEmitter implements IC
     }
 
     public add(amount: number) {
-        if (!this.enabled || amount <= 0)
-            return;
+        if (!this.enabled || amount <= 0) return;
 
         this._current += amount;
-        if (this._current >= this._required)
-            this.levelUp();
+        if (this._current >= this._required) this.levelUp();
 
         this.emit(Experience.CHANGE_EVENT, this._current, this._required);
     }

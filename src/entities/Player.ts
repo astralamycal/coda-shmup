@@ -1,14 +1,14 @@
-import {Input, Scene} from "phaser";
-import {PlayerShipData, PlayerShipsData} from "../gameData/PlayerShipsData.ts";
-import type {BulletData} from "../gameData/BulletData.ts";
-import {ProgressionData} from "../gameData/ProgressionData.ts";
+import {Input, Scene} from 'phaser';
+import {PlayerShipData, PlayerShipsData} from '../gameData/PlayerShipsData.ts';
+import type {BulletData} from '../gameData/BulletData.ts';
+import {ProgressionData} from '../gameData/ProgressionData.ts';
 import Entity from './Entity.ts';
-import GameConstants from "../GameConstants.ts";
-import Experience from "../components/Experience.ts";
-import Health from "../components/Health.ts";
-import Movement from "../components/Movement.ts";
-import PlayerStats from "../components/PlayerStats.ts";
-import Weapon from "../components/Weapon.ts";
+import GameConstants from '../GameConstants.ts';
+import Experience from '../components/Experience.ts';
+import Health from '../components/Health.ts';
+import Movement from '../components/Movement.ts';
+import PlayerStats from '../components/PlayerStats.ts';
+import Weapon from '../components/Weapon.ts';
 
 export default class Player extends Entity {
     private static readonly BASE_HEALTH: number = 5;
@@ -83,8 +83,7 @@ export default class Player extends Entity {
                 this.setAlpha(1);
 
                 // A dead player stays disabled
-                if (this.active)
-                    this.arcadeBody.setEnable(true);
+                if (this.active) this.arcadeBody.setEnable(true);
             });
         });
     }
@@ -96,8 +95,7 @@ export default class Player extends Entity {
 
     private applyStats() {
         const stats = this.getComponent(PlayerStats);
-        if (!stats)
-            return;
+        if (!stats) return;
 
         const weapon = this.getComponent(Weapon);
         weapon?.setDamage(this._bulletData.damage * stats.get('damage'));
@@ -112,8 +110,7 @@ export default class Player extends Entity {
     // Keys 1, 2 and 3: during a speed boost, the chosen ship comes back at the end of the boost
     public selectPlayerShip(playerShipDataId: number) {
         this._selectedShipId = playerShipDataId;
-        if (!this._speedBoostTimer)
-            this.useShip(playerShipDataId);
+        if (!this._speedBoostTimer) this.useShip(playerShipDataId);
     }
 
     public applySpeedBoost(playerShipDataId: number, duration: number) {
@@ -140,8 +137,7 @@ export default class Player extends Entity {
     // One bullet towards each of the farthest enemies
     private shootHomingBullets() {
         const homingBullets: number = this.getComponent(PlayerStats)?.get('homingBullets') ?? 0;
-        if (!this.active || homingBullets === 0)
-            return;
+        if (!this.active || homingBullets === 0) return;
 
         const targets: Entity[] = this.getFarthestTargets(homingBullets);
         targets.forEach((target: Entity) => {
@@ -149,13 +145,11 @@ export default class Player extends Entity {
             this.getComponent(Weapon)?.shootAt(this, angle);
         });
 
-        if (targets.length > 0)
-            this.scene.sound.play(GameConstants.SoundKeys.PLAYER_SHOOT);
+        if (targets.length > 0) this.scene.sound.play(GameConstants.SoundKeys.PLAYER_SHOOT);
     }
 
     private getFarthestTargets(count: number): Entity[] {
-        if (!this._targets)
-            return [];
+        if (!this._targets) return [];
 
         const distanceTo = (target: Entity): number => Phaser.Math.Distance.Between(this.x, this.y, target.x, target.y);
         return (this._targets.getMatching('active', true) as Entity[])
@@ -181,7 +175,11 @@ export default class Player extends Entity {
             }
         }
         // Stop player from going offscreen
-        this.x = Phaser.Math.Clamp(this.x, this.displayWidth / 2, this.scene.cameras.main.width - this.displayWidth / 2);
+        this.x = Phaser.Math.Clamp(
+            this.x,
+            this.displayWidth / 2,
+            this.scene.cameras.main.width - this.displayWidth / 2
+        );
 
         // Press space to shoot
         if (this._cursorKeys.space.isDown) {

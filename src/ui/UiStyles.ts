@@ -1,5 +1,5 @@
-import {GameObjects} from "phaser";
-import GameConstants from "../GameConstants.ts";
+import {GameObjects} from 'phaser';
+import GameConstants from '../GameConstants.ts';
 
 // Shared look of the menus: neon colors on the night road
 export default class UiStyles {
@@ -36,6 +36,6 @@ export default class UiStyles {
     }
 
     public static formatScore(score: number): string {
-        return score.toString().padStart(GameConstants.MAX_SCORE_DIGITS, "0");
+        return score.toString().padStart(GameConstants.MAX_SCORE_DIGITS, '0');
     }
 }

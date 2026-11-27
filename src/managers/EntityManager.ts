@@ -1,20 +1,20 @@
-import {GameObjects, Plugins, Physics, Scene, Scenes} from "phaser";
-import Health from "../components/Health.ts";
-import PlayerStats from "../components/PlayerStats.ts";
-import Boss from "../entities/Boss.ts";
-import Bullet from "../entities/Bullet.ts";
-import Enemy from "../entities/Enemy.ts";
-import Entity from "../entities/Entity.ts";
-import Orb from "../entities/Orb.ts";
-import SpeedPowerUp from "../entities/SpeedPowerUp.ts";
-import Player from "../entities/Player.ts";
-import GroupUtils from "../utils/GroupUtils.ts";
-import {BossData} from "../gameData/BossData.ts";
-import {EnemiesData} from "../gameData/EnemiesData.ts";
-import {EnemyTypeData} from "../gameData/EnemyTypeData.ts";
-import {ProgressionData, SpeedPowerUpData} from "../gameData/ProgressionData.ts";
-import GameConstants from "../GameConstants.ts";
-import RegistryConstants from "../RegistryConstants.ts";
+import {GameObjects, Plugins, Physics, Scene, Scenes} from 'phaser';
+import Health from '../components/Health.ts';
+import PlayerStats from '../components/PlayerStats.ts';
+import Boss from '../entities/Boss.ts';
+import Bullet from '../entities/Bullet.ts';
+import Enemy from '../entities/Enemy.ts';
+import Entity from '../entities/Entity.ts';
+import Orb from '../entities/Orb.ts';
+import SpeedPowerUp from '../entities/SpeedPowerUp.ts';
+import Player from '../entities/Player.ts';
+import GroupUtils from '../utils/GroupUtils.ts';
+import {BossData} from '../gameData/BossData.ts';
+import {EnemiesData} from '../gameData/EnemiesData.ts';
+import {EnemyTypeData} from '../gameData/EnemyTypeData.ts';
+import {ProgressionData, SpeedPowerUpData} from '../gameData/ProgressionData.ts';
+import GameConstants from '../GameConstants.ts';
+import RegistryConstants from '../RegistryConstants.ts';
 
 export default class EntityManager extends Plugins.ScenePlugin {
     public static readonly PLUGIN_KEY: string = 'EntityManager';
@@ -30,7 +30,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
         createCallback: (bullet: GameObjects.GameObject) => {
             (bullet as Bullet).init();
         }
-    }
+    };
 
     private _player: Player;
     private _playerBullets: Physics.Arcade.Group;
@@ -189,20 +189,17 @@ export default class EntityManager extends Plugins.ScenePlugin {
     }
 
     private trySpawnPowerUp(x: number, y: number) {
-        if (Math.random() >= this._speedPowerUpData.dropChance)
-            return;
+        if (Math.random() >= this._speedPowerUpData.dropChance) return;
 
         const powerUp = this._powerUps.get() as SpeedPowerUp;
-        if (!powerUp)
-            return;
+        if (!powerUp) return;
 
         powerUp.enable(x, y, Phaser.Utils.Array.GetRandom(this._speedPowerUpData.shipIds));
     }
 
     private spawnOrb(x: number, y: number, xpValue: number) {
         const orb = this._orbs.get() as Orb;
-        if (!orb)
-            return;
+        if (!orb) return;
 
         orb.enable(x, y, xpValue);
     }
@@ -213,8 +210,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
     }
 
     private onScoreChanged(_: any, score: number) {
-        if (score < this._nextBossScore)
-            return;
+        if (score < this._nextBossScore) return;
 
         this._nextBossScore += this._bossData.spawn.everyScore;
         this.spawnBoss();
@@ -224,8 +220,7 @@ export default class EntityManager extends Plugins.ScenePlugin {
     public spawnBoss() {
         // Null when the previous boss is still alive
         const boss = this._bosses.get() as Boss;
-        if (!boss)
-            return;
+        if (!boss) return;
 
         boss.enable(this.scene!.cameras.main.centerX, -boss.displayHeight, this._bossSpawnCount);
         this._bossSpawnCount++;

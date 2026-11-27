@@ -1,5 +1,5 @@
-import IComponent from "./IComponent.ts";
-import Entity from "../entities/Entity.ts";
+import IComponent from './IComponent.ts';
+import Entity from '../entities/Entity.ts';
 
 export default class Health extends Phaser.Events.EventEmitter implements IComponent {
     public enabled: boolean = true;
@@ -53,8 +53,7 @@ export default class Health extends Phaser.Events.EventEmitter implements ICompo
     }
 
     private adjust(delta: number, emitEvents: boolean = true): void {
-        if (!this.enabled)
-            return;
+        if (!this.enabled) return;
 
         const prev: number = this._current;
         this._current = Phaser.Math.Clamp(this._current + delta, 0, this._max);

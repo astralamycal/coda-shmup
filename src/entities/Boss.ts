@@ -1,10 +1,10 @@
 import Entity from './Entity.ts';
-import GameConstants from "../GameConstants.ts";
-import Health from "../components/Health.ts";
-import SineMovement from "../components/SineMovement.ts";
-import Weapon from "../components/Weapon.ts";
-import {BossData} from "../gameData/BossData.ts";
-import {RewardData} from "../gameData/RewardData.ts";
+import GameConstants from '../GameConstants.ts';
+import Health from '../components/Health.ts';
+import SineMovement from '../components/SineMovement.ts';
+import Weapon from '../components/Weapon.ts';
+import {BossData} from '../gameData/BossData.ts';
+import {RewardData} from '../gameData/RewardData.ts';
 
 export default class Boss extends Entity {
     private static readonly FACING_DOWN_ANGLE: number = 90;
@@ -27,7 +27,9 @@ export default class Boss extends Entity {
     public init(bulletsGroup: Phaser.Physics.Arcade.Group, data: BossData) {
         this.addComponent(new Health(data.health, this));
         this.addComponent(new SineMovement(data.movement));
-        this.addComponent(new Weapon(bulletsGroup, data.weapon.bullet, data.weapon.bulletCount, data.weapon.spreadAngle));
+        this.addComponent(
+            new Weapon(bulletsGroup, data.weapon.bullet, data.weapon.bulletCount, data.weapon.spreadAngle)
+        );
 
         // Listen once, not on every enable(): the boss is reused from the pool
         this.getComponent(Health)?.on(Health.CHANGE_EVENT, this.onHealthChanged, this);
@@ -76,22 +78,19 @@ export default class Boss extends Entity {
         this.setTintFill(Boss.HIT_FLASH_COLOR);
         this.playHitSound();
 
-        if (current === 0)
-            this.disableBody();
+        if (current === 0) this.disableBody();
 
         this.scene.time.delayedCall(Boss.HIT_FLASH_DURATION, () => {
             // Back to the boss own color, not clearTint(): it would lose its tint
             this.setTint(this._tint);
 
-            if (current === 0)
-                this.disable();
+            if (current === 0) this.disable();
         });
     }
 
     private playHitSound() {
         const now: number = this.scene.time.now;
-        if (now - this._lastHitSoundTime < Boss.HIT_SOUND_COOLDOWN)
-            return;
+        if (now - this._lastHitSoundTime < Boss.HIT_SOUND_COOLDOWN) return;
 
         this._lastHitSoundTime = now;
         this.scene.sound.play(GameConstants.SoundKeys.BOSS_HIT);

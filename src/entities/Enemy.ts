@@ -1,11 +1,11 @@
 import type {BulletData} from '../gameData/BulletData.ts';
 import Entity from './Entity.ts';
-import GameConstants from "../GameConstants.ts";
-import Health from "../components/Health.ts";
-import Movement from "../components/Movement.ts";
-import Weapon from "../components/Weapon.ts";
-import {EnemyTypeData} from "../gameData/EnemyTypeData.ts";
-import {RewardData} from "../gameData/RewardData.ts";
+import GameConstants from '../GameConstants.ts';
+import Health from '../components/Health.ts';
+import Movement from '../components/Movement.ts';
+import Weapon from '../components/Weapon.ts';
+import {EnemyTypeData} from '../gameData/EnemyTypeData.ts';
+import {RewardData} from '../gameData/RewardData.ts';
 
 export default class Enemy extends Entity {
     public static readonly FRAME: string = 'enemyCar';
@@ -22,7 +22,7 @@ export default class Enemy extends Entity {
         color: '#ff4fd8',
         outline: '#ffd6f5',
         speed: 480,
-        damage: 1,
+        damage: 1
     };
     private _shootTimerConfig: Phaser.Types.Time.TimerEventConfig;
     private _shootTimer: Phaser.Time.TimerEvent;
@@ -62,7 +62,7 @@ export default class Enemy extends Entity {
                     {key: 'sprites', frame: Enemy.FRAME + '-shoot0'},
                     {key: 'sprites', frame: Enemy.FRAME + '-shoot1'}
                 ],
-                frameRate: 4,
+                frameRate: 4
             });
         }
 
@@ -102,15 +102,13 @@ export default class Enemy extends Entity {
         this._isFlashing = true;
         this.setTintFill(Enemy.HIT_FLASH_COLOR);
 
-        if (current === 0)
-            this.disableBody();
+        if (current === 0) this.disableBody();
 
         this.scene.time.delayedCall(Enemy.HIT_FLASH_DURATION, () => {
             this._isFlashing = false;
             this.setTint(this._tint);
 
-            if (current === 0)
-                this.disable();
+            if (current === 0) this.disable();
         });
     }
 
@@ -125,7 +123,7 @@ export default class Enemy extends Entity {
     }
 
     preUpdate(timeSinceLaunch: number, deltaTime: number) {
-        super.preUpdate(timeSinceLaunch, deltaTime)
+        super.preUpdate(timeSinceLaunch, deltaTime);
 
         // Destroy entities when out of screen
         if (this.y > this.scene.cameras.main.height + this.displayHeight) {
